@@ -1,0 +1,294 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; script-src 'self'; style-src 'self'; worker-src 'self'; connect-src 'self'; img-src 'self' data:; object-src 'none'; base-uri 'self'; form-action 'none'"
+    />
+    <meta
+      name="description"
+      content="Check a numerical answer with exact arithmetic. Inspect rigorous solution bounds and export a portable, independently runnable certificate."
+    />
+    <title>Certloom · Check the answer</title>
+    <link rel="stylesheet" href="./style.css" />
+    <script type="module" src="./app.mjs"></script>
+  </head>
+  <body>
+    <a class="skip" href="#workbench">Skip to workbench</a>
+    <header class="masthead">
+      <a class="wordmark" href="./"
+        >Certloom<span class="mark" aria-hidden="true">✳</span></a
+      ><span class="edition">EXACT ARITHMETIC / LINEAR SYSTEMS</span
+      ><a href="https://github.com/nazeeh111/Certloom">Source ↗</a>
+    </header>
+    <main>
+      <section class="intro" aria-labelledby="title">
+        <div>
+          <p class="eyebrow">A numerical answer is a candidate.</p>
+          <h1 id="title">Know what<br />the answer <em>proves.</em></h1>
+          <p class="lede">
+            Check a solution against its exact stored equations. Get a rigorous
+            interval around every component, and see whether your threshold
+            actually follows.
+          </p>
+        </div>
+        <aside class="principle" aria-label="Verification principle">
+          <p class="eyebrow">THE INDEPENDENT CHECK</p>
+          <div class="equation">A x<span class="star">*</span> = b</div>
+          <div class="equation small">
+            ‖x − x<span class="star">*</span>‖<sub>∞</sub> ≤ η / (1 − q)
+          </div>
+          <p>
+            When q &lt; 1, the supplied matrix R proves a unique solution and an
+            error bound. A small residual alone does not.
+          </p>
+          <a href="./docs/method.html">Read the mathematical scope ↗</a>
+        </aside>
+      </section>
+      <section
+        id="workbench"
+        class="workbench"
+        aria-label="Certificate workbench"
+      >
+        <div class="input-panel">
+          <div class="section-head">
+            <span class="step">01</span>
+            <h2>Choose the claim</h2>
+            <span class="local-tag">STAYS IN THIS BROWSER</span>
+          </div>
+          <p class="muted">
+            Start with an original example, or bring a Certloom certificate. The
+            file contains the equations, candidate answer and approximate
+            inverse R.
+          </p>
+          <div id="examples" class="examples" aria-label="Prepared examples">
+            <p class="muted">Loading examples…</p>
+          </div>
+          <div class="input-actions">
+            <label class="button secondary upload" for="certificate-file"
+              >Open certificate<input
+                id="certificate-file"
+                type="file"
+                accept=".json,application/json" /></label
+            ><span id="file-name" class="filename"
+              >No certificate selected</span
+            >
+          </div>
+          <details class="source-input">
+            <summary>Edit or paste certificate JSON</summary>
+            <label for="certificate-text" class="sr-only"
+              >Certificate JSON, maximum 2 MiB</label
+            ><textarea
+              id="certificate-text"
+              spellcheck="false"
+              placeholder='{"format":"certloom-linear-v1", …}'
+            ></textarea>
+            <p class="micro">
+              Finite binary64 coefficients are canonical hexadecimal strings.
+              Duplicate keys, extra fields and arbitrary expressions are
+              refused. <a href="./docs/method.html">Format and limits</a>
+            </p>
+          </details>
+          <div class="run-actions">
+            <button id="verify" class="button primary" type="button" disabled>
+              Check with exact arithmetic
+              <span aria-hidden="true">→</span></button
+            ><button
+              id="cancel"
+              class="button secondary"
+              type="button"
+              disabled
+            >
+              Cancel
+            </button>
+          </div>
+          <p id="activity" role="status" aria-live="polite" class="activity">
+            Choose an example to begin. No account or runtime download.
+          </p>
+          <p id="error" role="alert" class="error" hidden></p>
+        </div>
+        <section class="result-panel" aria-labelledby="result-title">
+          <div class="section-head">
+            <span class="step">02</span>
+            <h2 id="result-title">Inspect the evidence</h2>
+          </div>
+          <div id="empty" class="empty">
+            <span class="empty-symbol" aria-hidden="true"
+              >[ x − r, x + r ]</span
+            >
+            <h3>The interval decides.</h3>
+            <p>
+              A verified system can still have a wide error bound. A threshold
+              is established only when the entire interval lies on the required
+              side.
+            </p>
+            <div class="legend">
+              <span>Candidate</span><span>Certified enclosure</span
+              ><span>Separate decision</span>
+            </div>
+          </div>
+          <div id="result" hidden>
+            <div id="verdict" class="verdict">
+              <p id="status-kicker" class="eyebrow"></p>
+              <h3 id="status-title"></h3>
+              <p id="status-copy"></p>
+            </div>
+            <div class="metrics">
+              <div>
+                <span>Contraction bound · q</span><strong id="q"></strong
+                ><progress
+                  id="q-meter"
+                  max="1"
+                  value="0"
+                  aria-label="Contraction bound relative to one"
+                ></progress
+                ><small>Exact value must be strictly below 1</small>
+              </div>
+              <div>
+                <span>Transformed residual · η</span><strong id="eta"></strong
+                ><small>Recomputed, not trusted</small>
+              </div>
+              <div>
+                <span>Uniform error radius · r</span
+                ><strong id="radius"></strong
+                ><small>Applies to every component</small>
+              </div>
+            </div>
+            <p class="micro">
+              These decimal quantities are rounded upward. A displayed q of 1
+              may conceal a smaller exact value; the exact fraction and exact
+              test determine the verdict.
+            </p>
+            <section
+              id="decision"
+              class="decision"
+              hidden
+              aria-labelledby="decision-title"
+            >
+              <p class="eyebrow">YOUR THRESHOLD</p>
+              <h4 id="decision-title"></h4>
+              <p id="decision-copy"></p>
+              <dl class="threshold-details">
+                <div>
+                  <dt>Required threshold</dt>
+                  <dd id="threshold"></dd>
+                </div>
+                <div>
+                  <dt>Guaranteed lower bound</dt>
+                  <dd id="decision-lower"></dd>
+                </div>
+                <div>
+                  <dt>Guaranteed upper bound</dt>
+                  <dd id="decision-upper"></dd>
+                </div>
+              </dl>
+            </section>
+            <div id="vectors" hidden>
+              <div class="vector-head">
+                <h4>Every component, accounted for</h4>
+                <span id="dimension" class="mono"></span>
+              </div>
+              <p class="micro">
+                Decimal bounds are rounded outward at 18 places. Expand a row
+                for its authoritative exact fractions. Candidate decimals are
+                for orientation.
+              </p>
+              <div
+                class="table-scroll"
+                tabindex="0"
+                role="region"
+                aria-label="Solution component bounds"
+              >
+                <table>
+                  <thead>
+                    <tr>
+                      <th scope="col">Index</th>
+                      <th scope="col">Candidate x</th>
+                      <th scope="col">Lower bound</th>
+                      <th scope="col">Upper bound</th>
+                    </tr>
+                  </thead>
+                  <tbody id="vector-body"></tbody>
+                </table>
+              </div>
+            </div>
+            <details class="exact-evidence">
+              <summary>Inspect exact proof quantities</summary>
+              <pre id="exact"></pre>
+            </details>
+            <div class="export-area">
+              <div>
+                <span class="step">03</span>
+                <h4>Take the evidence with you</h4>
+                <p class="micro">
+                  The ZIP pairs these exact input bytes with a standalone Python
+                  checker, this receipt and instructions. Standard library only;
+                  no installation.
+                </p>
+              </div>
+              <div class="export-buttons">
+                <button
+                  id="download-bundle"
+                  type="button"
+                  class="button primary"
+                  disabled
+                >
+                  Download portable proof .zip ↓</button
+                ><button
+                  id="download-receipt"
+                  type="button"
+                  class="button secondary"
+                  disabled
+                >
+                  Verification .json ↓
+                </button>
+              </div>
+            </div>
+            <details class="source-identity">
+              <summary>Input identity and verification scope</summary>
+              <dl>
+                <dt>Certificate SHA-256</dt>
+                <dd id="certificate-hash" class="mono"></dd>
+                <dt>Meaning</dt>
+                <dd>A byte identity, not proof of origin or authenticity.</dd>
+                <dt>Checked claim</dt>
+                <dd>
+                  The exact stored binary64 linear equations, interpreted as
+                  rational numbers. This does not certify measurement quality,
+                  physical assumptions, an external solver or hardware.
+                </dd>
+              </dl>
+            </details>
+          </div>
+        </section>
+      </section>
+      <section class="scope">
+        <h2>Certify the equations.<br />Keep the assumptions visible.</h2>
+        <div>
+          <p>
+            The verifier independently recomputes q = ‖I − RA‖∞ and η = ‖R(b −
+            Ax)‖∞ using integers and exact fractions. If the contraction premise
+            fails, it refuses an enclosure. If the interval crosses your
+            threshold, it says undecidable.
+          </p>
+          <p>
+            Square real systems, 1–128 unknowns. Certificates up to 2 MiB. No
+            uploaded code is executed. A 20-second deadline and Cancel stop only
+            this computation. Serve the source bundle over HTTP; module workers
+            do not run from a file:// page.
+          </p>
+          <a href="./docs/method.html"
+            >Method, boundaries and mathematical foundations ↗</a
+          >
+        </div>
+      </section>
+    </main>
+    <footer>
+      <span>Certloom / an answer you can check.</span
+      ><a href="https://github.com/nazeeh111/Certloom">Code &amp; releases ↗</a
+      ><span>Original code · MIT</span>
+    </footer>
+  </body>
+</html>

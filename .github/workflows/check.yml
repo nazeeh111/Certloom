@@ -1,0 +1,43 @@
+name: Check delivered artifacts
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    name: ${{ matrix.os }} / Python ${{ matrix.python }} / Node ${{ matrix.node }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-latest
+            python: "3.10"
+            node: "20"
+          - os: ubuntu-latest
+            python: "3.14"
+            node: "24"
+          - os: macos-latest
+            python: "3.14"
+            node: "24"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node }}
+      - name: Exact arithmetic and detached artifacts
+        run: python -m unittest discover -s tests -v
+      - name: Independent JavaScript and lifecycle controls
+        run: node --test tests/test_web_verify.cjs tests/test_web_lifecycle.cjs
+      - name: Build release artifacts
+        run: python scripts/package.py --out dist
+      - name: Install the delivered wheel and check packaged resources
+        run: python scripts/check_installed.py --wheel dist/certloom-0.1.0-py3-none-any.whl
