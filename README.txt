@@ -1,0 +1,2 @@
+Certloom browser lab
+Serve these files using localhost HTTP or HTTPS. Computation uses local BigInt arithmetic in a Web Worker; there is no CDN or computation service. file:// workers are unsupported. Original examples are declared mathematical equations, not hardware measurements. Python checker artifacts verify the same input independently using only the standard library. Sources: https://github.com/nazeeh111/Certloom

@@ -1,0 +1,90 @@
+{
+  "version": 1,
+  "files": [
+    {
+      "path": "app.mjs",
+      "bytes": 22234,
+      "sha256": "c264808023da9ef9513afeedae4519f4db075b9d3bb01522dad29a6c644d5eb2"
+    },
+    {
+      "path": "index.html",
+      "bytes": 11763,
+      "sha256": "28c9498fef0593d9e4087847d7b80ad32e03aa018830c95f575202a70f098459"
+    },
+    {
+      "path": "style.css",
+      "bytes": 13216,
+      "sha256": "6c9464cbde5b34ff345c2dc07dce7d6d9721d386c06ecca8671af2f931230824"
+    },
+    {
+      "path": "verify.mjs",
+      "bytes": 11795,
+      "sha256": "672ed202fc1403172eceb161ba000064fc39bc34957b8d0dd4e5de6d27763d89"
+    },
+    {
+      "path": "worker.mjs",
+      "bytes": 1613,
+      "sha256": "4049363bbed7959cb38e1f68c3f0fb81ad22c1dc4376f8bce7a0bb4705c6110c"
+    },
+    {
+      "path": "examples/hilbert12.json",
+      "bytes": 7549,
+      "sha256": "4a395c29a4569606c6ea2bd0a2787dbb702a69354457b9fb1b462e08441e6c6e"
+    },
+    {
+      "path": "examples/hilbert8.json",
+      "bytes": 3549,
+      "sha256": "8e0551ee478ae944829c94bbead51a04d261385561c198b3937b830e923871ec"
+    },
+    {
+      "path": "examples/ladder64.json",
+      "bytes": 144225,
+      "sha256": "34b0690915263e0e3f0c376fc671fe0a47cea3c3c759bb4d77eecd1bc717760c"
+    },
+    {
+      "path": "examples/manifest.json",
+      "bytes": 2268,
+      "sha256": "d9f141e9f1cb3e3a76c1b7c8dcbdcde55fce83966b2d10deb34c7d1154edb98b"
+    },
+    {
+      "path": "examples/validation.json",
+      "bytes": 31375,
+      "sha256": "09dce91c4b4ea5670e58891f593b59a4014e1a941a9e891640c49c3495d879f5"
+    },
+    {
+      "path": "examples/wrong-answer.json",
+      "bytes": 388,
+      "sha256": "264bf0022494a47993c0bdf18162da57c3d9c7debee9cb29554ba5b109c930d3"
+    },
+    {
+      "path": "examples/zero-preconditioner.json",
+      "bytes": 346,
+      "sha256": "409c1adbbec97fa3ed11de8bc717fd623fd0f733bc9ca82929aeaaae2c331f2a"
+    },
+    {
+      "path": "docs/method.css",
+      "bytes": 452,
+      "sha256": "7778c9b6a390c7bc2f19a592cde7265473a9d41c7c20798c1ff4b8b7fc3245bd"
+    },
+    {
+      "path": "docs/method.html",
+      "bytes": 3492,
+      "sha256": "9d0fad6f1e2de37e7c375dbf0ffa8c6c17234dae5bdba977239cfe180673d94e"
+    },
+    {
+      "path": "checker.py",
+      "bytes": 12299,
+      "sha256": "ecda3fa54edf8bc080aa03ac493c55e931504000bdab44cbf9a28666b15041dc"
+    },
+    {
+      "path": "LICENSE.txt",
+      "bytes": 1074,
+      "sha256": "ab0ce13cd5b12cd01185876ef0c286fedd048342b6460f36bc4e9c7ee21d999a"
+    },
+    {
+      "path": "README.txt",
+      "bytes": 424,
+      "sha256": "03df5acb5519c4b027ff4428debb8ebe9c07c7b716e730c3a010237be2a45bff"
+    }
+  ]
+}

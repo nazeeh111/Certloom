@@ -1,0 +1,52 @@
+{
+  "version": 1,
+  "producer": {
+    "numpy": "2.3.5",
+    "script": "scripts/generate_examples.py",
+    "candidate": "numpy.linalg.solve; wrong-answer explicitly altered; zero-preconditioner explicitly altered",
+    "scope": "Original mathematical equations, not hardware or measured data",
+    "oracle": "Exact analytic ladder Green function; independent rational Gauss-Jordan for smaller systems"
+  },
+  "examples": [
+    {
+      "id": "ladder64",
+      "title": "A voltage decision with evidence",
+      "description": "An original ideal 64-node resistor ladder. Certify whether node 32 is above 16 V; this models equations, not measured hardware.",
+      "file": "ladder64.json",
+      "bytes": 144225,
+      "sha256": "34b0690915263e0e3f0c376fc671fe0a47cea3c3c759bb4d77eecd1bc717760c"
+    },
+    {
+      "id": "hilbert8",
+      "title": "Small residual, bounded error",
+      "description": "Original ill-conditioned stored binary64 equations. A small floating residual alone does not establish answer accuracy.",
+      "file": "hilbert8.json",
+      "bytes": 3549,
+      "sha256": "8e0551ee478ae944829c94bbead51a04d261385561c198b3937b830e923871ec"
+    },
+    {
+      "id": "hilbert12",
+      "title": "Small residual, failed proof",
+      "description": "Original ill-conditioned stored binary64 equations. A small floating residual alone does not establish answer accuracy.",
+      "file": "hilbert12.json",
+      "bytes": 7549,
+      "sha256": "4a395c29a4569606c6ea2bd0a2787dbb702a69354457b9fb1b462e08441e6c6e"
+    },
+    {
+      "id": "wrong-answer",
+      "title": "An unsupported decision",
+      "description": "A deliberately altered answer has a tiny residual. Its wide valid enclosure cannot establish the threshold claim.",
+      "file": "wrong-answer.json",
+      "bytes": 388,
+      "sha256": "264bf0022494a47993c0bdf18162da57c3d9c7debee9cb29554ba5b109c930d3"
+    },
+    {
+      "id": "zero-preconditioner",
+      "title": "A refused certificate",
+      "description": "Even a correct answer cannot pass this proof with an unusable zero approximate inverse. Refusal is useful information.",
+      "file": "zero-preconditioner.json",
+      "bytes": 346,
+      "sha256": "409c1adbbec97fa3ed11de8bc717fd623fd0f733bc9ca82929aeaaae2c331f2a"
+    }
+  ]
+}
