@@ -1,19 +1,31 @@
 # Certloom
 
-**Send a solver result with a checker that proves its error bound.**
+**Send a numerical answer that someone else can check.**
+
+Check a captured diffusion result in your browser, download its equations and error-bound checker, and verify the bundle with plain Python. The recipient needs no FiPy, NumPy or producing solver. The guarantee concerns the **stored linear equations**, not the physical model's accuracy.
+
+**[Open the browser lab](https://nazeeh111.github.io/Certloom/)** · [Download a ready-to-check proof](https://github.com/nazeeh111/Certloom/releases/download/v0.2.0/certloom-0.2.0-diffusion-proof.zip) · [Method and limits](https://nazeeh111.github.io/Certloom/docs/method.html)
+
+## Try the complete handoff
+
+1. **Check in the browser.** Choose **FiPy · steady state**, then **Check with exact arithmetic**. Inspect the bounds on all 400 solution components and the separate threshold decision.
+2. **Export the evidence.** Choose **Download portable proof .zip**. The bundle contains the input, result, standalone checker and instructions.
+3. **Verify elsewhere.** Extract the ZIP into a new directory and run the command below there. Only Python 3.10+ and its standard library are needed; Certloom itself does not need to be installed.
+
+```sh
+python3 -I -S checker.py certificate.json
+```
+
+The checker recomputes the claim instead of trusting the saved result. Compare its output with the `result` field in `verification.json`. To try the recipient step immediately, use the ready-to-check proof linked above.
+
+![Actual browser check of the 400-cell FiPy diffusion result: component bounds and a separate threshold decision.](docs/images/lab.jpg)
 
 [![Artifact checks](https://github.com/nazeeh111/Certloom/actions/workflows/check.yml/badge.svg)](https://github.com/nazeeh111/Certloom/actions/workflows/check.yml)
 [![Release](https://img.shields.io/github/v/release/nazeeh111/Certloom?color=2857cd)](https://github.com/nazeeh111/Certloom/releases/latest)
 [![Python](https://img.shields.io/badge/Python-3.10%2B-416079)](https://nazeeh111.github.io/Certloom/docs/method.html)
 [![License](https://img.shields.io/badge/Original_code-MIT-176448)](LICENSE)
 
-[Try the browser lab](https://nazeeh111.github.io/Certloom/) · [Download a release](https://github.com/nazeeh111/Certloom/releases) · [Method and format](https://nazeeh111.github.io/Certloom/docs/method.html)
-
-A 400-cell NIST FiPy diffusion result travels as 1,920 nonzero matrix entries, a proposed solution and positive weights. Certloom checks the stored equations with exact arithmetic, encloses every component and determines whether a threshold follows. Export the input, result and standalone Python checker. The recipient needs only the Python standard library, with no FiPy, NumPy or producing solver.
-
-The browser lab runs a separate BigInt implementation locally in a Web Worker. No account, CDN, runtime download or computation service. Dense certificates with an approximate inverse remain supported.
-
-![Certloom checking the 400-cell FiPy diffusion result, its component enclosure and the separate threshold decision.](docs/images/lab.jpg)
+The browser runs a separate BigInt implementation locally in a Web Worker. No account, CDN, runtime download or computation service. Dense certificates with an approximate inverse remain supported.
 
 ## Check an application result
 
@@ -21,13 +33,7 @@ Open the lab and choose **FiPy · final transient**. These are the actual equati
 
 Choose **FiPy · steady state** to check the subsequent steady solve. Both matrices have 400 rows and 1,920 nonzeros. The steady case uses nonuniform positive weights. **When weights fail** supplies unit weights for that same system: the minimum dominance gap is zero, so this proof refuses. **A changed answer** replaces a candidate component with zero: the wider valid enclosure cannot establish the original threshold. A certified enclosure and a useful decision are separate outcomes.
 
-Download a proof, extract it into a new directory and run:
-
-```sh
-python3 -I -S checker.py certificate.json
-```
-
-Compare the output with the `result` field in `verification.json`. The source-bearing checker recomputes the claim; it does not trust the receipt. Proof bundles retain the NIST attribution and terms in `NOTICES.txt`, separate from Certloom's MIT license. The release's `certloom-0.2.0-diffusion-proof.zip` contains a ready-to-check steady-state proof.
+Proof bundles retain the NIST attribution and terms in `NOTICES.txt`, separate from Certloom's MIT license. The ready-to-check proof linked above contains the steady-state example.
 
 This verifies the **exact stored binary64 linear system**. The final transient right-hand side includes a previous approximate time state. It does not certify accumulated time-stepping error, PDE discretization accuracy or physical measurements.
 
