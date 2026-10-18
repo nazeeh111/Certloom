@@ -3,28 +3,68 @@
   "files": [
     {
       "path": "app.mjs",
-      "bytes": 22234,
-      "sha256": "c264808023da9ef9513afeedae4519f4db075b9d3bb01522dad29a6c644d5eb2"
+      "bytes": 25798,
+      "sha256": "4fe7bd3a1472e3d42e1bd6372df5e93af762603d38400c4dd1be6f799bf3c73f"
     },
     {
       "path": "index.html",
-      "bytes": 11763,
-      "sha256": "28c9498fef0593d9e4087847d7b80ad32e03aa018830c95f575202a70f098459"
+      "bytes": 12715,
+      "sha256": "faed492499ca6782dae1351eedd21fb149fd2bda5570d2e1f5ccda7bc1033ebe"
     },
     {
       "path": "style.css",
-      "bytes": 13216,
-      "sha256": "6c9464cbde5b34ff345c2dc07dce7d6d9721d386c06ecca8671af2f931230824"
+      "bytes": 14551,
+      "sha256": "ae66af70c1dfd764df806da072eeb0b21b1a95495ac62c23c558370c48dc6021"
     },
     {
       "path": "verify.mjs",
-      "bytes": 11795,
-      "sha256": "672ed202fc1403172eceb161ba000064fc39bc34957b8d0dd4e5de6d27763d89"
+      "bytes": 16932,
+      "sha256": "db8a705f77c88794e5f5638b00f88c1444667a8a40e3aa755b629faa0325ef35"
     },
     {
       "path": "worker.mjs",
       "bytes": 1613,
       "sha256": "4049363bbed7959cb38e1f68c3f0fb81ad22c1dc4376f8bce7a0bb4705c6110c"
+    },
+    {
+      "path": "examples/FIPY-NOTICE.txt",
+      "bytes": 338,
+      "sha256": "eb76b0c011ab926ec0d1f2547da3e205bb59e3dbacbc8e0d0ed95ff4be36b9ac"
+    },
+    {
+      "path": "examples/FIPY-TERMS.txt",
+      "bytes": 1878,
+      "sha256": "83c519e315a2da6c78aa822989e896358a870ebb51246b3049f671eb84b6f16e"
+    },
+    {
+      "path": "examples/fipy-altered-answer.json",
+      "bytes": 112481,
+      "sha256": "28d24994413a3f26c49b848bdfcefa8eec16c7df4c2ce7055b0740e5407b8f3b"
+    },
+    {
+      "path": "examples/fipy-mesh20x20.py",
+      "bytes": 3190,
+      "sha256": "86e2e3b00aa2160a288ab191fcb47d60fd4faee33dd0bc4e6f81b094761b293d"
+    },
+    {
+      "path": "examples/fipy-provenance.json",
+      "bytes": 3329,
+      "sha256": "efc062396d542139ed0eba535d6e41066ccdca9e80469c004a360782271d0ccf"
+    },
+    {
+      "path": "examples/fipy-steady400.json",
+      "bytes": 112493,
+      "sha256": "19d9d9074341b632e659104f0d676add232c95ab4f3c8bce31c3befd29b77568"
+    },
+    {
+      "path": "examples/fipy-transient400.json",
+      "bytes": 118184,
+      "sha256": "8001aaf16bc86b55ed4912ec18ab9bdaece1e7ed70c26a52ace6c0c0e6175998"
+    },
+    {
+      "path": "examples/fipy-uniform-refusal.json",
+      "bytes": 112493,
+      "sha256": "a65bbc58910471835a149fd03310e3be68a2cd07d03c9c8748ff9a22b7843fb4"
     },
     {
       "path": "examples/hilbert12.json",
@@ -43,8 +83,8 @@
     },
     {
       "path": "examples/manifest.json",
-      "bytes": 2268,
-      "sha256": "d9f141e9f1cb3e3a76c1b7c8dcbdcde55fce83966b2d10deb34c7d1154edb98b"
+      "bytes": 3739,
+      "sha256": "6b386e974be34dec93652070fc52e990cdfca63e0b2dcd8ac1c94ced99041287"
     },
     {
       "path": "examples/validation.json",
@@ -68,13 +108,13 @@
     },
     {
       "path": "docs/method.html",
-      "bytes": 3492,
-      "sha256": "9d0fad6f1e2de37e7c375dbf0ffa8c6c17234dae5bdba977239cfe180673d94e"
+      "bytes": 10559,
+      "sha256": "5624737eaff6a79b864367b773b844feb20b022ff67fba6d5e04e5018ad59e0a"
     },
     {
       "path": "checker.py",
-      "bytes": 12299,
-      "sha256": "ecda3fa54edf8bc080aa03ac493c55e931504000bdab44cbf9a28666b15041dc"
+      "bytes": 19288,
+      "sha256": "e8ec6c48dd20f89313f2096c64d181536e2388aa587b012c7f64bfaca70c2048"
     },
     {
       "path": "LICENSE.txt",
@@ -83,8 +123,8 @@
     },
     {
       "path": "README.txt",
-      "bytes": 424,
-      "sha256": "03df5acb5519c4b027ff4428debb8ebe9c07c7b716e730c3a010237be2a45bff"
+      "bytes": 516,
+      "sha256": "f24271c76e3127fc5d38b1a06d0f7739e441c01c353f399d11eb248f5a7d6092"
     }
   ]
 }

@@ -1,6 +1,7 @@
 """Exact verification of square systems containing stored binary64 values.
 
-The Neumann-series bound is established numerical verification theory.
+The dense Neumann-series bound and sparse weighted diagonal-dominance bound
+are established numerical verification theory.
 This checker certifies the declared equations, not their physical meaning,
 source authenticity, or the process that produced a candidate solution.
 """
@@ -14,7 +15,11 @@ MAX_BYTES = 2 * 1024 * 1024
 MAX_DIMENSION = 128
 MAX_DECIMAL_PLACES = 1000
 FORMAT = "certloom-linear-v1"
+SPARSE_FORMAT = "certloom-sparse-dd-v1"
+MAX_SPARSE_DIMENSION = 4096
+MAX_NONZEROS = 32768
 _ROOT_KEYS = {"format", "A", "R", "b", "x", "decision"}
+_SPARSE_KEYS = {"format", "A", "b", "x", "weights", "decision"}
 _INTEGER = re.compile(r"(?:0|-[1-9][0-9]*|[1-9][0-9]*)\Z")
 _POSITIVE = re.compile(r"[1-9][0-9]*\Z")
 
@@ -56,6 +61,8 @@ def _hex(value, location):
 
 
 def _validate(document):
+    if isinstance(document, dict) and document.get("format") == SPARSE_FORMAT:
+        return _validate_sparse(document)
     if not isinstance(document, dict) or set(document) != _ROOT_KEYS:
         raise VerificationError(
             "Certificate must contain exactly format, A, R, b, x and decision"
@@ -100,6 +107,77 @@ def _validate(document):
     return n, matrices, vectors, decision, threshold
 
 
+def _validate_sparse(document):
+    if not isinstance(document, dict) or set(document) != _SPARSE_KEYS:
+        raise VerificationError(
+            "Sparse certificate must contain exactly format, A, b, x, weights and decision"
+        )
+    A = document["A"]
+    if not isinstance(A, dict) or set(A) != {"dimension", "indptr", "indices", "data"}:
+        raise VerificationError(
+            "Sparse A must contain exactly dimension, indptr, indices and data"
+        )
+    n = A["dimension"]
+    if type(n) is not int or not 1 <= n <= MAX_SPARSE_DIMENSION:
+        raise VerificationError(
+            "Sparse dimension must be an integer between 1 and 4096"
+        )
+    indptr, indices, data = A["indptr"], A["indices"], A["data"]
+    if not isinstance(indptr, list) or len(indptr) != n + 1:
+        raise VerificationError("CSR indptr must have dimension + 1 entries")
+    if (
+        not isinstance(indices, list)
+        or not isinstance(data, list)
+        or len(indices) != len(data)
+        or len(data) > MAX_NONZEROS
+    ):
+        raise VerificationError(
+            "CSR indices and data must match and have at most 32768 entries"
+        )
+    nnz = len(data)
+    if (
+        any(type(v) is not int or not 0 <= v <= nnz for v in indptr)
+        or indptr[0] != 0
+        or indptr[-1] != nnz
+        or any(a > b for a, b in zip(indptr, indptr[1:]))
+    ):
+        raise VerificationError(
+            "CSR indptr must be integer, nondecreasing, start at zero and end at nnz"
+        )
+    if any(type(j) is not int or not 0 <= j < n for j in indices):
+        raise VerificationError(
+            "CSR column indices must be integers within the dimension"
+        )
+    for i in range(n):
+        if any(
+            indices[k - 1] >= indices[k] for k in range(indptr[i] + 1, indptr[i + 1])
+        ):
+            raise VerificationError(
+                "CSR columns must be strictly increasing in each row; duplicates are refused"
+            )
+    for name in ("b", "x", "weights"):
+        if not isinstance(document[name], list) or len(document[name]) != n:
+            raise VerificationError(name + " must match the sparse dimension")
+    coefficients = [_hex(value, "A.data coefficient") for value in data]
+    if any(pair[0] == 0 for pair in coefficients):
+        raise VerificationError("Explicit zero entries are not canonical CSR")
+    vectors = [
+        [_hex(value, name + " coefficient") for value in document[name]]
+        for name in ("b", "x", "weights")
+    ]
+    if any(pair[0] <= 0 for pair in vectors[2]):
+        raise VerificationError("Every sparse weight must be strictly positive")
+    decision = document["decision"]
+    threshold = None
+    if decision is not None:
+        if not isinstance(decision, dict) or set(decision) != {"index", "above"}:
+            raise VerificationError("Decision must be null or exactly index and above")
+        if type(decision["index"]) is not int or not 0 <= decision["index"] < n:
+            raise VerificationError("Decision index must be an integer in the system")
+        threshold = _hex(decision["above"], "decision.above")
+    return n, indptr, indices, coefficients, vectors, decision, threshold
+
+
 def load_document(text):
     """Decode bounded UTF-8 JSON, refusing duplicates, then validate its schema."""
     if not isinstance(text, str):
@@ -127,7 +205,9 @@ def _rational(numerator, denominator=1):
 
 
 def verify(document):
-    """Recompute a certificate's exact contraction, error and decision enclosure."""
+    """Recompute the format's exact sufficient bound and decision enclosures."""
+    if isinstance(document, dict) and document.get("format") == SPARSE_FORMAT:
+        return _verify_sparse(document)
     n, matrices, vectors, decision, threshold = _validate(document)
     # Every stored value is integer / 2**scale. Integer dot products avoid
     # allocating/reducing a Fraction for each multiply and accumulation.
@@ -198,6 +278,88 @@ def verify(document):
             else (
                 "not_above" if upper * threshold_denominator <= rhs else "undecidable"
             )
+        )
+        result["decision"] = {
+            "index": index,
+            "above": _rational(threshold_numerator, threshold_denominator),
+            "status": status,
+            "lower": result["enclosures"][index]["lower"].copy(),
+            "upper": result["enclosures"][index]["upper"].copy(),
+        }
+    return result
+
+
+def _verify_sparse(document):
+    n, indptr, indices, coefficients, vectors, decision, threshold = _validate_sparse(
+        document
+    )
+    # One common dyadic denominator makes the two sparse row sums exact.
+    # No dense matrix, inverse, or binary64 arithmetic is used in the proof.
+    scale = max(pair[1] for vector in vectors for pair in vector)
+    scale = max(scale, max((pair[1] for pair in coefficients), default=0))
+    unit = 1 << scale
+
+    def integer(pair):
+        return pair[0] << (scale - pair[1])
+
+    data = [integer(pair) for pair in coefficients]
+    b, x, weights = [[integer(pair) for pair in vector] for vector in vectors]
+    gaps, residuals = [], []
+    for i in range(n):
+        diagonal, off_diagonal, product = 0, 0, 0
+        for k in range(indptr[i], indptr[i + 1]):
+            j, value = indices[k], data[k]
+            product += value * x[j]
+            if j == i:
+                diagonal = abs(value) * weights[i]
+            else:
+                off_diagonal += abs(value) * weights[j]
+        gaps.append(diagonal - off_diagonal)
+        residuals.append(abs(b[i] * unit - product))
+    minimum_gap = min(gaps)
+    result = {
+        "status": "not_certified",
+        "dimension": n,
+        "method": "weighted-diagonal-dominance",
+        "nonzeros": len(data),
+        "minimum_gap": _rational(minimum_gap, unit * unit),
+    }
+    if minimum_gap <= 0:
+        result["reason"] = (
+            "The recomputed weighted diagonal-dominance gap is not strictly positive in every row; this method cannot certify the solution."
+        )
+        return result
+    # Both residual and gap have denominator unit**2; compare ratios without
+    # division. The theorem gives |error_i| <= weight_i * max_i |r_i|/gap_i.
+    numerator, denominator = 0, 1
+    for residual, gap in zip(residuals, gaps):
+        if residual * denominator > numerator * gap:
+            numerator, denominator = residual, gap
+    result["status"] = "certified"
+    result["tau"] = _rational(numerator, denominator)
+    radius_denominator = unit * denominator
+    radii = [weight * numerator for weight in weights]
+    result["radii"] = [_rational(radius, radius_denominator) for radius in radii]
+    result["enclosures"] = [
+        {
+            "lower": _rational(value * denominator - radius, radius_denominator),
+            "upper": _rational(value * denominator + radius, radius_denominator),
+        }
+        for value, radius in zip(x, radii)
+    ]
+    if decision is not None:
+        index = decision["index"]
+        lower = x[index] * denominator - radii[index]
+        upper = x[index] * denominator + radii[index]
+        threshold_numerator, threshold_scale = threshold
+        threshold_denominator = 1 << threshold_scale
+        rhs = threshold_numerator * radius_denominator
+        status = (
+            "above"
+            if lower * threshold_denominator > rhs
+            else "not_above"
+            if upper * threshold_denominator <= rhs
+            else "undecidable"
         )
         result["decision"] = {
             "index": index,

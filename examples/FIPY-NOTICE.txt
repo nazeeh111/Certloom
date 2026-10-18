@@ -1,0 +1,1 @@
+The fipy-*.json examples derive from the NIST FiPy example reproduced unchanged as fipy-mesh20x20.py. NIST authors and terms are retained in FIPY-TERMS.txt. The original Certloom software license does not replace those terms. See fipy-provenance.json for source identity, capture procedure, numerical runtime, altered controls and scope.
