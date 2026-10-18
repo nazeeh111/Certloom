@@ -344,6 +344,7 @@ async function init() {
     if (!["certified", "not_certified"].includes(result.status))
       throw new Error("Unexpected verification status.");
     const certified = result.status === "certified";
+    const sparse = result.method === "weighted-diagonal-dominance";
     $("verdict").classList.toggle("refused", !certified);
     setText(
       "status-kicker",
@@ -358,20 +359,43 @@ async function init() {
     setText(
       "status-copy",
       certified
-        ? "The contraction test passed. The radius below bounds the candidate's maximum error. A wide radius still means a weak answer."
+        ? sparse
+          ? "Every weighted dominance gap is positive. The exact residual establishes an individual error bound for every component."
+          : "The contraction test passed. The uniform radius bounds every component's error. A wide radius still means a weak answer."
         : result.reason ||
             "The contraction bound is not below 1. This method cannot certify the answer.",
     );
-    setText("q", display(result.q));
-    setText("eta", display(result.eta));
-    $("q-meter").value = Math.min(1, Math.max(0, Number(display(result.q))));
-    setText("radius", certified ? display(result.radius) : "No bound");
+    setText("metric-one-label", sparse ? "Minimum weighted gap · d" : "Contraction bound · q");
+    setText("metric-one-note", sparse ? "Exact value must be strictly positive" : "Exact value must be strictly below 1");
+    setText("metric-two-label", sparse ? "Residual / gap bound · τ" : "Transformed residual · η");
+    setText("metric-three-label", sparse ? "Largest component error bound" : "Uniform error radius · r");
+    setText("metric-three-note", sparse ? "Individual bounds appear in each row" : "Applies to every component");
+    setText("q", display(sparse ? result.minimum_gap : result.q, sparse ? "lower" : "upper"));
+    setText("eta", sparse ? certified ? display(result.tau) : "No bound" : display(result.eta));
+    $("q-meter").hidden = sparse;
+    if (!sparse) $("q-meter").value = Math.min(1, Math.max(0, Number(display(result.q))));
+    const largestRadius = sparse && certified ? result.radii.reduce((a,b) => BigInt(a.numerator)*BigInt(b.denominator) >= BigInt(b.numerator)*BigInt(a.denominator) ? a : b) : result.radius;
+    setText("radius", certified ? display(largestRadius) : "No bound");
+    setText("metric-rounding", sparse
+      ? "The gap is rounded downward; error bounds are rounded upward. Exact fractions determine the verdict."
+      : "Proof quantities are rounded upward. A displayed q of 1 may conceal a smaller exact value; the exact test determines the verdict.");
     $("vectors").hidden = !certified;
     $("decision").hidden = !certified || !result.decision;
     $("vector-body").replaceChildren();
     if (certified) {
-      setText("dimension", `${result.dimension} unknowns · indices start at 0`);
-      result.enclosures.forEach((enclosure, index) => {
+      setText("dimension", `${result.dimension} unknowns${sparse ? ` · ${result.nonzeros.toLocaleString()} coefficients` : ""} · indices start at 0`);
+      let start = 0;
+      const pageSize = 50;
+      $("component-index").max = String(result.dimension - 1);
+      $("component-index").value = String(result.decision?.index ?? 0);
+      function renderPage() {
+        $("vector-body").replaceChildren();
+        const end = Math.min(start + pageSize, result.dimension);
+        setText("component-page", `Indices ${start}–${end - 1} of ${result.dimension} components`);
+        $("previous-components").disabled = start === 0;
+        $("next-components").disabled = end === result.dimension;
+        result.enclosures.slice(start, end).forEach((enclosure, offset) => {
+        const index = start + offset;
         const row = document.createElement("tr");
         const values = [
           String(index),
@@ -393,12 +417,24 @@ async function init() {
         const summary = document.createElement("summary");
         summary.textContent = `Exact bounds for component ${index}`;
         const pre = document.createElement("pre");
-        pre.textContent = `Lower: ${exact(enclosure.lower)}\nUpper: ${exact(enclosure.upper)}`;
+        pre.textContent = `Lower: ${exact(enclosure.lower)}\nUpper: ${exact(enclosure.upper)}${sparse ? `\nError radius: ${exact(result.radii[index])}` : ""}`;
         details.append(summary, pre);
         cell.append(details);
         detailsRow.append(cell);
         $("vector-body").append(row, detailsRow);
-      });
+        });
+      }
+      $("previous-components").onclick = () => { start = Math.max(0, start - pageSize); renderPage(); };
+      $("next-components").onclick = () => { start = Math.min(Math.floor((result.dimension - 1) / pageSize) * pageSize, start + pageSize); renderPage(); };
+      $("show-component").onclick = () => {
+        const input = $("component-index");
+        if (!input.reportValidity()) return;
+        const index = input.valueAsNumber;
+        if (!Number.isSafeInteger(index) || index < 0 || index >= result.dimension) return;
+        start = Math.floor(index / pageSize) * pageSize;
+        renderPage();
+      };
+      renderPage();
       if (result.decision) {
         const decision = result.decision,
           label = `Solution component ${decision.index}`;
@@ -420,7 +456,8 @@ async function init() {
           throw new Error("Unexpected threshold status.");
         setText("decision-title", descriptions[decision.status][0]);
         setText("decision-copy", descriptions[decision.status][1]);
-        setText("threshold", exact(decision.above));
+        setText("threshold", display(decision.above));
+        $("threshold").title = exact(decision.above);
         setText("decision-lower", display(decision.lower, "lower"));
         setText("decision-upper", display(decision.upper, "upper"));
       }
@@ -429,11 +466,9 @@ async function init() {
       "exact",
       JSON.stringify(
         {
-          q: result.q,
-          eta: result.eta,
-          ...(certified
-            ? { radius: result.radius }
-            : { reason: result.reason }),
+          ...(sparse
+            ? { method: result.method, decision: result.decision, dimension: result.dimension, nonzeros: result.nonzeros, minimum_gap: result.minimum_gap, ...(certified ? {tau: result.tau, component_bounds: "Inspect exact bounds in each table row. The exported receipt contains every component radius and enclosure."} : {reason: result.reason}) }
+            : { decision: result.decision, q: result.q, eta: result.eta, ...(certified ? {radius: result.radius} : {reason: result.reason}) }),
         },
         null,
         2,
@@ -522,6 +557,8 @@ async function init() {
         undefined,
         MAX_BYTES,
       );
+      const notice = await boundedFetch(new URL("./examples/FIPY-NOTICE.txt", import.meta.url), undefined, 65536);
+      const terms = await boundedFetch(new URL("./examples/FIPY-TERMS.txt", import.meta.url), undefined, 65536);
       if (generation !== revision || current !== evidence) return;
       const checkerHash = await hash(checker);
       if (generation !== revision || current !== evidence) return;
@@ -534,6 +571,7 @@ async function init() {
         },
         { name: "verification.json", bytes: receipt(evidence) },
         { name: "README.txt", bytes: encoder.encode(instructions) },
+        { name: "NOTICES.txt", bytes: encoder.encode(new TextDecoder().decode(notice) + "\n" + new TextDecoder().decode(terms)) },
       ]);
       download(archive, "certloom-proof.zip", "application/zip");
       activity(

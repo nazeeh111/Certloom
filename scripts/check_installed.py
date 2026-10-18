@@ -176,6 +176,47 @@ def check(source):
         )
         checks.append("actual installed ladder claim and Hilbert12 refused exit3")
 
+        sparse = package / "examples/fipy-steady400.json"
+        expected_sparse = verify_text(sparse.read_text(encoding="utf-8"))
+        sparse_result = json.loads(run([executable, "verify", sparse]).stdout)
+        assert sparse_result == expected_sparse
+        assert (
+            sparse_result["dimension"] == 400
+            and sparse_result["decision"]["status"] == "above"
+        )
+        sparse_refusal = json.loads(
+            run(
+                [executable, "verify", package / "examples/fipy-uniform-refusal.json"],
+                3,
+            ).stdout
+        )
+        assert sparse_refusal["status"] == "not_certified"
+        sparse_bundle = temporary / "diffusion.zip"
+        run([executable, "bundle", sparse, "--out", sparse_bundle])
+        sparse_detached = temporary / "sparse-detached"
+        sparse_detached.mkdir()
+        with zipfile.ZipFile(sparse_bundle) as archive:
+            safe_archive(archive)
+            for name in archive.namelist():
+                (sparse_detached / name).write_bytes(archive.read(name))
+        assert (
+            json.loads(
+                run(
+                    [
+                        sys.executable,
+                        "-I",
+                        "-S",
+                        sparse_detached / "checker.py",
+                        sparse_detached / "certificate.json",
+                    ]
+                ).stdout
+            )
+            == sparse_result
+        )
+        checks.append(
+            "installed sparse400 CLI, refusal exit3, bundle and detached stdlib checker exact agreement"
+        )
+
         result_path = temporary / "result.json"
         run([executable, "verify", ladder, "--out", result_path])
         before = result_path.read_bytes()
@@ -320,11 +361,14 @@ def bootstrap(wheel, source, receipt):
         completed = subprocess.run(
             arguments,
             env=environment,
-            check=True,
+            check=False,
             timeout=120,
             text=True,
             capture_output=True,
         )
+        if completed.returncode:
+            sys.stderr.write(completed.stderr)
+            raise RuntimeError("Installed artifact check failed.")
         return completed.stdout
 
 

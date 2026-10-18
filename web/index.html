@@ -26,23 +26,20 @@
     <main>
       <section class="intro" aria-labelledby="title">
         <div>
-          <p class="eyebrow">A numerical answer is a candidate.</p>
-          <h1 id="title">Know what<br />the answer <em>proves.</em></h1>
+          <p class="eyebrow">PORTABLE NUMERICAL EVIDENCE / 0.2</p>
+          <h1 id="title">A solution.<br />A bound.<br /><span>A proof to share.</span></h1>
           <p class="lede">
-            Check a solution against its exact stored equations. Get a rigorous
-            interval around every component, and see whether your threshold
-            actually follows.
+            Check dense or sparse linear equations with exact arithmetic. Bound every component, decide your threshold, and send a checker that runs without your solver.
           </p>
         </div>
         <aside class="principle" aria-label="Verification principle">
-          <p class="eyebrow">THE INDEPENDENT CHECK</p>
+          <p class="eyebrow">400 CELLS. NO DENSE INVERSE.</p>
           <div class="equation">A x<span class="star">*</span> = b</div>
           <div class="equation small">
-            ‖x − x<span class="star">*</span>‖<sub>∞</sub> ≤ η / (1 − q)
+            |xᵢ − xᵢ<span class="star">*</span>| ≤ wᵢ τ
           </div>
           <p>
-            When q &lt; 1, the supplied matrix R proves a unique solution and an
-            error bound. A small residual alone does not.
+            The NIST FiPy example supplies 1,920 stored coefficients. Certloom checks positive weighted dominance gaps and exact residuals. The original solver is not needed to verify the handoff.
           </p>
           <a href="./docs/method.html">Read the mathematical scope ↗</a>
         </aside>
@@ -59,9 +56,7 @@
             <span class="local-tag">STAYS IN THIS BROWSER</span>
           </div>
           <p class="muted">
-            Start with an original example, or bring a Certloom certificate. The
-            file contains the equations, candidate answer and approximate
-            inverse R.
+            Start with the captured NIST application, an original dense example, or your own certificate. Each file includes the equations, candidate answer and proof witness.
           </p>
           <div id="examples" class="examples" aria-label="Prepared examples">
             <p class="muted">Loading examples…</p>
@@ -137,26 +132,26 @@
             </div>
             <div class="metrics">
               <div>
-                <span>Contraction bound · q</span><strong id="q"></strong
+                <span id="metric-one-label">Contraction bound · q</span><strong id="q"></strong
                 ><progress
                   id="q-meter"
                   max="1"
                   value="0"
                   aria-label="Contraction bound relative to one"
                 ></progress
-                ><small>Exact value must be strictly below 1</small>
+                ><small id="metric-one-note">Exact value must be strictly below 1</small>
               </div>
               <div>
-                <span>Transformed residual · η</span><strong id="eta"></strong
+                <span id="metric-two-label">Transformed residual · η</span><strong id="eta"></strong
                 ><small>Recomputed, not trusted</small>
               </div>
               <div>
-                <span>Uniform error radius · r</span
+                <span id="metric-three-label">Uniform error radius · r</span
                 ><strong id="radius"></strong
-                ><small>Applies to every component</small>
+                ><small id="metric-three-note">Applies to every component</small>
               </div>
             </div>
-            <p class="micro">
+            <p class="micro" id="metric-rounding">
               These decimal quantities are rounded upward. A displayed q of 1
               may conceal a smaller exact value; the exact fraction and exact
               test determine the verdict.
@@ -195,6 +190,14 @@
                 for its authoritative exact fractions. Candidate decimals are
                 for orientation.
               </p>
+              <div class="component-navigation" aria-label="Component pages">
+                <span id="component-page" class="mono" role="status"></span>
+                <button type="button" id="previous-components" class="button secondary">Previous 50</button>
+                <button type="button" id="next-components" class="button secondary">Next 50</button>
+                <label for="component-index">Index</label>
+                <input id="component-index" type="number" min="0" step="1" required aria-label="Component index" />
+                <button type="button" id="show-component" class="button secondary">Show</button>
+              </div>
               <div
                 class="table-scroll"
                 tabindex="0"
@@ -268,13 +271,10 @@
         <h2>Certify the equations.<br />Keep the assumptions visible.</h2>
         <div>
           <p>
-            The verifier independently recomputes q = ‖I − RA‖∞ and η = ‖R(b −
-            Ax)‖∞ using integers and exact fractions. If the contraction premise
-            fails, it refuses an enclosure. If the interval crosses your
-            threshold, it says undecidable.
+            Sparse certificates use positive weights and strict weighted diagonal dominance. Dense certificates use an approximate inverse and a contraction bound. Both recompute their premises and residuals with exact integers and fractions. A failed premise refuses the enclosure; an inconclusive interval leaves the threshold undecidable.
           </p>
           <p>
-            Square real systems, 1–128 unknowns. Certificates up to 2 MiB. No
+            Sparse: up to 4,096 unknowns and 32,768 nonzeros. Dense: up to 128 unknowns. Certificates up to 2 MiB. No
             uploaded code is executed. A 20-second deadline and Cancel stop only
             this computation. Serve the source bundle over HTTP; module workers
             do not run from a file:// page.
@@ -288,7 +288,7 @@
     <footer>
       <span>Certloom / an answer you can check.</span
       ><a href="https://github.com/nazeeh111/Certloom">Code &amp; releases ↗</a
-      ><span>Original code · MIT</span>
+      ><span>Original code · MIT / FiPy example · NIST terms</span>
     </footer>
   </body>
 </html>

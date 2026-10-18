@@ -7,17 +7,40 @@ import sys
 import tempfile
 import unittest
 import zipfile
+from unittest.mock import patch
 from pathlib import Path
 
 from certloom.artifact import bundle_members, write_bundle
 from certloom.engine import VerificationError, verify_text
 from certloom.producer import make_certificate
 from certloom.site import build
+from certloom.artifact import asset_directory
 
 ROOT = Path(__file__).resolve().parents[1]
 
 
 class ArtifactTests(unittest.TestCase):
+    def test_static_site_excludes_installer_generated_bytecode(self):
+        with tempfile.TemporaryDirectory() as directory:
+            base = Path(directory)
+            examples = base / "examples"
+            (examples / "__pycache__").mkdir(parents=True)
+            (examples / "__pycache__/source.cpython-314.pyc").write_bytes(b"cache")
+            (examples / "loose.pyc").write_bytes(b"cache")
+            (examples / "source.py").write_text('"""Retained source."""\n')
+            with patch(
+                "certloom.site.asset_directory",
+                side_effect=lambda name: (
+                    examples if name == "examples" else asset_directory(name)
+                ),
+            ):
+                manifest = build(base / "site")
+            paths = {row["path"] for row in manifest["files"]}
+            self.assertIn("examples/source.py", paths)
+            self.assertFalse(
+                any("__pycache__" in p or p.endswith(".pyc") for p in paths)
+            )
+
     def test_actual_detached_export_preserves_certificate_and_recomputes_every_claim(
         self,
     ):

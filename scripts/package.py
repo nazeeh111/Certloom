@@ -196,6 +196,9 @@ def package(destination):
         prefix + "-py3-none-any.whl": wheel,
         prefix + "-source.zip": source,
         prefix + "-ladder-proof.zip": proof,
+        prefix + "-diffusion-proof.zip": bundle_members(
+            (ROOT / "examples/fipy-steady400.json").read_text(encoding="utf-8")
+        ),
     }
     with tempfile.TemporaryDirectory(prefix="certloom-static-") as directory:
         stage = Path(directory) / "site"
