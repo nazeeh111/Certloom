@@ -46,7 +46,7 @@ function parseDocument(text) {
     fail("Unterminated JSON string.");
   }
   function value(depth) {
-    if (++nodes > 40000 || depth > 8)
+    if (++nodes > 100000 || depth > 8)
       fail("JSON structure exceeds the certificate limits.");
     ws();
     const ch = text[pos];
@@ -120,7 +120,7 @@ function parseDocument(text) {
   const result = value(0);
   ws();
   if (pos !== text.length) fail("Unexpected bytes after JSON document.");
-  return result;
+  return { document: result, nodes };
 }
 
 function exactKeys(obj, keys, where) {
@@ -235,7 +235,10 @@ function shift(integer, from, to) {
 }
 
 export function verifyText(text) {
-  const doc = parseDocument(text);
+  const parsed = parseDocument(text), doc = parsed.document;
+  if (doc?.format === "certloom-sparse-dd-v1") return verifySparse(doc);
+  if (parsed.nodes > 40000)
+    fail("JSON structure exceeds the certificate limits.");
   exactKeys(doc, ROOT_KEYS, "Certificate");
   if (doc.format !== "certloom-linear-v1") fail("Unknown certificate format.");
   if (!Array.isArray(doc.A) || doc.A.length < 1 || doc.A.length > MAX_N)
@@ -336,6 +339,114 @@ export function verifyText(text) {
       lower: out(interval.lower),
       upper: out(interval.upper),
     };
+  }
+  return result;
+}
+
+function sparseIndex(value, lower, upper, where) {
+  if (!Number.isSafeInteger(value) || value < lower || value > upper)
+    fail(`${where} must be an integer in range.`);
+  return value;
+}
+
+function verifySparse(doc) {
+  exactKeys(doc, ["format", "A", "b", "x", "weights", "decision"], "Certificate");
+  exactKeys(doc.A, ["dimension", "indptr", "indices", "data"], "A");
+  const n = sparseIndex(doc.A.dimension, 1, 4096, "Sparse dimension");
+  const { indptr, indices, data } = doc.A;
+  if (!Array.isArray(data) || data.length > 32768)
+    fail("Sparse data must have at most 32768 entries.");
+  const nnz = data.length;
+  if (!Array.isArray(indices) || indices.length !== nnz ||
+      !Array.isArray(indptr) || indptr.length !== n + 1)
+    fail("CSR arrays have inconsistent dimensions.");
+  let previous = 0;
+  for (let i = 0; i <= n; i++) {
+    sparseIndex(indptr[i], 0, nnz, "CSR row pointer");
+    if (indptr[i] < previous) fail("CSR row pointers must be nondecreasing.");
+    previous = indptr[i];
+  }
+  if (indptr[0] !== 0 || indptr[n] !== nnz)
+    fail("CSR row pointers must start at zero and end at the nonzero count.");
+  for (let i = 0; i < n; i++) {
+    let column = -1;
+    for (let k = indptr[i]; k < indptr[i + 1]; k++) {
+      sparseIndex(indices[k], 0, n - 1, "CSR column index");
+      if (indices[k] <= column)
+        fail("CSR columns must be strictly increasing within each row.");
+      column = indices[k];
+    }
+  }
+  // All finite binary64 spellings and premises are validated before products.
+  const coefficients = data.map(hexDyadic);
+  if (coefficients.some(value => value.integer === 0n))
+    fail("Sparse data must not contain explicit zero entries.");
+  const rhs = vector(doc.b, n, "b"), centers = vector(doc.x, n, "x"),
+    weights = vector(doc.weights, n, "weights");
+  if (weights.some(value => value.integer <= 0n))
+    fail("Every sparse weight must be strictly positive.");
+  let decision = null;
+  if (doc.decision !== null) {
+    exactKeys(doc.decision, ["index", "above"], "Decision");
+    const index = sparseIndex(doc.decision.index, 0, n - 1, "Decision index");
+    const threshold = hexDyadic(doc.decision.above);
+    decision = { index, above: fromDyadic(threshold.integer, threshold.exponent) };
+  }
+
+  // A single nonnegative scale makes every supplied dyadic an integer / U.
+  // Gap and residual numerators then share denominator U^2. No dense matrix
+  // or floating product is constructed, including at binary64 extremes.
+  let power = 0;
+  for (const group of [coefficients, rhs, centers, weights])
+    for (const value of group)
+      if (value.integer !== 0n && -value.exponent > power) power = -value.exponent;
+  const U = 1n << BigInt(power);
+  const integers = group => group.map(value =>
+    value.integer === 0n ? 0n : value.integer << BigInt(value.exponent + power));
+  const A = integers(coefficients), B = integers(rhs), X = integers(centers), W = integers(weights);
+  const gaps = [], residuals = [];
+  let minimum = null;
+  for (let i = 0; i < n; i++) {
+    let diagonal = 0n, offDiagonal = 0n, dot = 0n;
+    for (let k = indptr[i]; k < indptr[i + 1]; k++) {
+      const j = indices[k], value = A[k];
+      dot += value * X[j];
+      if (j === i) diagonal = abs(value) * W[i];
+      else offDiagonal += abs(value) * W[j];
+    }
+    const gap = diagonal - offDiagonal;
+    gaps.push(gap); residuals.push(B[i] * U - dot);
+    if (minimum === null || gap < minimum) minimum = gap;
+  }
+  const result = { status: "not_certified", dimension: n,
+    method: "weighted-diagonal-dominance", nonzeros: nnz,
+    minimum_gap: out(rational(minimum, U * U)) };
+  if (minimum <= 0n) {
+    result.reason = "The recomputed weighted diagonal-dominance gap is not strictly positive in every row; this method cannot certify the solution.";
+    return result;
+  }
+  let numerator = 0n, denominator = 1n;
+  for (let i = 0; i < n; i++) {
+    const magnitude = abs(residuals[i]);
+    if (magnitude * denominator > numerator * gaps[i]) {
+      numerator = magnitude; denominator = gaps[i];
+    }
+  }
+  const tau = rational(numerator, denominator), boundDenominator = U * tau.d;
+  result.status = "certified";
+  result.tau = out(tau);
+  result.radii = W.map(value => out(rational(value * tau.n, boundDenominator)));
+  const bounds = X.map((value,i) => ({
+    lower: rational(value * tau.d - W[i] * tau.n, boundDenominator),
+    upper: rational(value * tau.d + W[i] * tau.n, boundDenominator),
+  }));
+  result.enclosures = bounds.map(interval => ({lower:out(interval.lower), upper:out(interval.upper)}));
+  if (decision) {
+    const interval = bounds[decision.index];
+    result.decision = { index: decision.index, above: out(decision.above),
+      status: compare(interval.lower, decision.above) > 0 ? "above" :
+        compare(interval.upper, decision.above) <= 0 ? "not_above" : "undecidable",
+      lower: out(interval.lower), upper: out(interval.upper) };
   }
   return result;
 }

@@ -1,0 +1,61 @@
+{
+  "source": {
+    "project": "NIST FiPy",
+    "url": "https://github.com/usnistgov/fipy/blob/d8f038a0663d7b2b1c716761ae2eed0e57e1c7c2/examples/diffusion/mesh20x20.py",
+    "commit": "d8f038a0663d7b2b1c716761ae2eed0e57e1c7c2",
+    "sha256": "86e2e3b00aa2160a288ab191fcb47d60fd4faee33dd0bc4e6f81b094761b293d",
+    "terms": "FIPY-TERMS.txt"
+  },
+  "runtime": {
+    "fipy": "4.0.3",
+    "numpy": "2.3.5",
+    "scipy": "1.18.1",
+    "python": "3.12.14"
+  },
+  "application": "Original doctest code executed once unchanged, except original __main__ viewer/input guards naturally skipped by an import-like harness. Grid20x20, dx=dy=1, diffusion1, initial0, ten implicit steps dt4.5, followed by the original steady-state solve. Both original corner checks returned True.",
+  "capture": "Term.cacheMatrix/cacheRHSvector enabled before each original solve; actual CSR A and RHS b copied with the resulting phi after calls10 and11. No fabricated RHS or mesh/time-step change.",
+  "coordinate": "Index19: bottom-right cell center (19.5,0.5), the original source lower-right corner observable.",
+  "weights": {
+    "fipy-transient400": "Unit weights fixed before application execution.",
+    "fipy-steady400": "One SciPy spsolve of M w = ones, M=diag(2*abs(diag(A)))-abs(A); the resulting binary64 weights are an untrusted proof witness, recomputed exactly by the checker."
+  },
+  "controls": {
+    "fipy-uniform-refusal": "Only steady-state weights changed to ones; must return not_certified.",
+    "fipy-altered-answer": "Only steady-state x[19] changed to zero; the enclosure remains certified but strict above0.98 must not be established."
+  },
+  "scope": "Certifies exact stored binary64 linear equations only. Transient b includes an approximate previous time state. No PDE discretization, accumulated time-stepping, physical accuracy, solver reliability or outside adoption claim.",
+  "certificates": [
+    {
+      "id": "fipy-transient400",
+      "title": "FiPy \u00b7 final transient",
+      "description": "400 cells, 1,920 coefficients. Check the original final-step corner decision without a dense inverse.",
+      "file": "fipy-transient400.json",
+      "bytes": 118184,
+      "sha256": "8001aaf16bc86b55ed4912ec18ab9bdaece1e7ed70c26a52ace6c0c0e6175998"
+    },
+    {
+      "id": "fipy-steady400",
+      "title": "FiPy \u00b7 steady state",
+      "description": "The same NIST application after its steady-state solve. Positive weights enable a sparse proof.",
+      "file": "fipy-steady400.json",
+      "bytes": 112493,
+      "sha256": "19d9d9074341b632e659104f0d676add232c95ab4f3c8bce31c3befd29b77568"
+    },
+    {
+      "id": "fipy-uniform-refusal",
+      "title": "When weights fail",
+      "description": "The steady-state equations with unit weights. A failed premise does not mean a singular system.",
+      "file": "fipy-uniform-refusal.json",
+      "bytes": 112493,
+      "sha256": "a65bbc58910471835a149fd03310e3be68a2cd07d03c9c8748ff9a22b7843fb4"
+    },
+    {
+      "id": "fipy-altered-answer",
+      "title": "A changed answer",
+      "description": "The steady-state candidate with corner 19 set to zero. The valid bound must lose the threshold claim.",
+      "file": "fipy-altered-answer.json",
+      "bytes": 112481,
+      "sha256": "28d24994413a3f26c49b848bdfcefa8eec16c7df4c2ce7055b0740e5407b8f3b"
+    }
+  ]
+}

@@ -36,8 +36,8 @@ jobs:
       - name: Exact arithmetic and detached artifacts
         run: python -m unittest discover -s tests -v
       - name: Independent JavaScript and lifecycle controls
-        run: node --test tests/test_web_verify.cjs tests/test_web_lifecycle.cjs
+        run: node --test tests/test_web_verify.cjs tests/test_web_lifecycle.cjs tests/test_web_sparse.cjs
       - name: Build release artifacts
         run: python scripts/package.py --out dist
       - name: Install the delivered wheel and check packaged resources
-        run: python scripts/check_installed.py --wheel dist/certloom-0.1.0-py3-none-any.whl
+        run: python scripts/check_installed.py --wheel dist/certloom-0.2.0-py3-none-any.whl
