@@ -782,6 +782,19 @@ footer {
   }
 }
 
+@media (max-width: 480px) {
+  .examples {
+    grid-template-columns: 1fr;
+  }
+  .example {
+    min-height: 0;
+    padding: 12px 14px;
+  }
+  .example span {
+    font-size: 12px;
+  }
+}
+
 @media (min-width: 1000px) {
   .workbench { display: grid; grid-template-columns: 320px minmax(0, 1fr); align-items: start; }
   .input-panel { padding: 26px 22px; border-bottom: 0; border-right: 1px solid var(--line); }
