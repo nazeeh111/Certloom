@@ -3,18 +3,18 @@
   "files": [
     {
       "path": "app.mjs",
-      "bytes": 25798,
-      "sha256": "4fe7bd3a1472e3d42e1bd6372df5e93af762603d38400c4dd1be6f799bf3c73f"
+      "bytes": 26631,
+      "sha256": "9eb03254b087cd514aa8a78e0c832007d51bf0b0ccd34095acaba9f87797fff7"
     },
     {
       "path": "index.html",
-      "bytes": 12715,
-      "sha256": "faed492499ca6782dae1351eedd21fb149fd2bda5570d2e1f5ccda7bc1033ebe"
+      "bytes": 12949,
+      "sha256": "5d73fe32898a2b38c7fde43061fe00814dd596532de6e68c8b569cc0bb72f32e"
     },
     {
       "path": "style.css",
-      "bytes": 14551,
-      "sha256": "ae66af70c1dfd764df806da072eeb0b21b1a95495ac62c23c558370c48dc6021"
+      "bytes": 15492,
+      "sha256": "8e01e36be82f6a3930482fb559478df2a4cb2e32ee933250e5dd1bc1983ffbfb"
     },
     {
       "path": "verify.mjs",

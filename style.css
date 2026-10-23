@@ -818,3 +818,15 @@ footer {
 .component-navigation .button { min-height: 32px; padding: 6px 9px; font-size: 10px; }
 .component-navigation input { width: 70px; min-height: 32px; border: 1px solid var(--line); padding: 4px; }
 .component-navigation > span { flex-basis: 100%; }
+
+/* Keep one useful starting point in reach; comparisons remain native disclosures. */
+.example-picker > .example { width: 100%; min-height: 88px; }
+.example-start { margin: 0 0 8px; font: 10px/1.5 var(--mono); letter-spacing: 1px; color: var(--red); }
+.more-examples { margin-top: 12px; }
+.more-examples > summary { padding: 10px 0; color: var(--red); cursor: pointer; font-size: 13px; }
+.more-examples .examples { margin-top: 10px; }
+.result-jump { display: inline-block; padding: 9px 0; color: var(--red); font-weight: 600; font-size: 13px; }
+#result-title { scroll-margin-top: 24px; }
+
+.start-link { display: inline-block; margin-top: 20px; padding: 6px 0; color: var(--red); font-size: 14px; font-weight: 600; }
+#workbench { scroll-margin-top: 24px; }

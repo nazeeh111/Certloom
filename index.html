@@ -31,6 +31,7 @@
           <p class="lede">
             Check dense or sparse linear equations with exact arithmetic. Bound every component, decide your threshold, and send a checker that runs without your solver.
           </p>
+          <a class="start-link" href="#workbench">Try the captured example ↓</a>
         </div>
         <aside class="principle" aria-label="Verification principle">
           <p class="eyebrow">400 CELLS. NO DENSE INVERSE.</p>
@@ -46,6 +47,7 @@
       </section>
       <section
         id="workbench"
+        tabindex="-1"
         class="workbench"
         aria-label="Certificate workbench"
       >
@@ -56,9 +58,9 @@
             <span class="local-tag">STAYS IN THIS BROWSER</span>
           </div>
           <p class="muted">
-            Start with the captured NIST application, an original dense example, or your own certificate. Each file includes the equations, candidate answer and proof witness.
+            Start with the captured NIST application below, then check its error bounds and threshold decision. More examples include altered answers and failed proof premises.
           </p>
-          <div id="examples" class="examples" aria-label="Prepared examples">
+          <div id="examples" class="example-picker" aria-label="Prepared examples">
             <p class="muted">Loading examples…</p>
           </div>
           <div class="input-actions">
@@ -102,12 +104,13 @@
           <p id="activity" role="status" aria-live="polite" class="activity">
             Choose an example to begin. No account or runtime download.
           </p>
+          <a id="inspect-result" class="result-jump" href="#result-title" hidden>Inspect the result ↓</a>
           <p id="error" role="alert" class="error" hidden></p>
         </div>
         <section class="result-panel" aria-labelledby="result-title">
           <div class="section-head">
             <span class="step">02</span>
-            <h2 id="result-title">Inspect the evidence</h2>
+            <h2 id="result-title" tabindex="-1">Inspect the evidence</h2>
           </div>
           <div id="empty" class="empty">
             <span class="empty-symbol" aria-hidden="true"
