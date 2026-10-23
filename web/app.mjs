@@ -246,6 +246,7 @@ async function init() {
     }
     verifier.cancel("Input changed. Computation cancelled.");
     $("result").hidden = true;
+    $("inspect-result").hidden = true;
     $("empty").hidden = false;
     $("error").hidden = true;
     activity(message);
@@ -492,9 +493,10 @@ async function init() {
       render(result);
       current = { certificate, certificateHash, result };
       setText("certificate-hash", certificateHash);
+      $("inspect-result").hidden = false;
       activity(
         result.status === "certified"
-          ? "Exact check complete. Inspect the radius and the separate threshold decision."
+          ? `Exact check complete. ${result.decision ? $("decision-title").textContent : "Inspect the certified error bounds."}`
           : "Check complete. The method refused an enclosure; the failed-premise receipt is still exportable.",
       );
     } catch (error) {
@@ -598,6 +600,17 @@ async function init() {
     )
       throw new Error("Invalid example manifest.");
     $("examples").replaceChildren();
+    const startLabel = document.createElement("p");
+    startLabel.className = "example-start";
+    startLabel.textContent = "START HERE / CAPTURED APPLICATION";
+    $("examples").append(startLabel);
+    const more = document.createElement("details"),
+      summary = document.createElement("summary"),
+      comparisons = document.createElement("div");
+    more.className = "more-examples";
+    summary.textContent = `Explore ${manifest.examples.length - 1} comparisons and failure controls`;
+    comparisons.className = "examples";
+    more.append(summary, comparisons);
     for (const example of manifest.examples) {
       if (
         typeof example.id !== "string" ||
@@ -651,8 +664,10 @@ async function init() {
           }
         }
       });
-      $("examples").append(button);
+      if (example === manifest.examples[0]) $("examples").append(button);
+      else comparisons.append(button);
     }
+    if (comparisons.children.length) $("examples").append(more);
   } catch (error) {
     $("examples").replaceChildren();
     const message = document.createElement("p");
