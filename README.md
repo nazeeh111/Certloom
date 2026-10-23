@@ -132,4 +132,4 @@ python3 scripts/package.py --out dist
 python3 scripts/check_installed.py --wheel dist/certloom-0.2.0-py3-none-any.whl
 ```
 
-The verifier needs no third-party Python runtime packages. Node runs the separate JavaScript checks. Source builds use setuptools; the release packager also has a standard-library path. [MIT licensed](LICENSE), with the NIST example notices retained. Developed and reviewed with Codex. See [SECURITY.md](SECURITY.md) for reporting implementation defects.
+The verifier needs no third-party Python runtime packages. Node runs the separate JavaScript checks. Source builds use setuptools; the release packager also has a standard-library path. [MIT licensed](LICENSE), with the NIST example notices retained. See [SECURITY.md](SECURITY.md) for reporting implementation defects.
