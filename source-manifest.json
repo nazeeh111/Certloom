@@ -8,13 +8,13 @@
     },
     {
       "path": "index.html",
-      "bytes": 12949,
-      "sha256": "5d73fe32898a2b38c7fde43061fe00814dd596532de6e68c8b569cc0bb72f32e"
+      "bytes": 12873,
+      "sha256": "d52021848de440d1c51db0711cb4283aee39c89179b17a8aef6a9ff8f685026d"
     },
     {
       "path": "style.css",
-      "bytes": 15492,
-      "sha256": "8e01e36be82f6a3930482fb559478df2a4cb2e32ee933250e5dd1bc1983ffbfb"
+      "bytes": 16857,
+      "sha256": "2134d818e577af2533011c24c3bdc91e62c7382de98d9496bae36508b1934974"
     },
     {
       "path": "verify.mjs",
@@ -103,13 +103,13 @@
     },
     {
       "path": "docs/method.css",
-      "bytes": 452,
-      "sha256": "7778c9b6a390c7bc2f19a592cde7265473a9d41c7c20798c1ff4b8b7fc3245bd"
+      "bytes": 817,
+      "sha256": "8cdd06ba43d4144fc1b4a367b743904370186003f6a960545b613b8a756e1863"
     },
     {
       "path": "docs/method.html",
-      "bytes": 10559,
-      "sha256": "5624737eaff6a79b864367b773b844feb20b022ff67fba6d5e04e5018ad59e0a"
+      "bytes": 10513,
+      "sha256": "9154d0e7b33352c2caa5943a5591877519300d99a95bf202d32ae1a3598773ca"
     },
     {
       "path": "checker.py",
