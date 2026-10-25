@@ -19,31 +19,21 @@
     <a class="skip" href="#workbench">Skip to workbench</a>
     <header class="masthead">
       <a class="wordmark" href="./"
-        >Certloom<span class="mark" aria-hidden="true">✳</span></a
+        >Certloom<span class="mark" aria-hidden="true">[ ]</span></a
       ><span class="edition">EXACT ARITHMETIC / LINEAR SYSTEMS</span
       ><a href="https://github.com/nazeeh111/Certloom">Source ↗</a>
     </header>
     <main>
       <section class="intro" aria-labelledby="title">
         <div>
-          <p class="eyebrow">PORTABLE NUMERICAL EVIDENCE / 0.2</p>
-          <h1 id="title">A solution.<br />A bound.<br /><span>A proof to share.</span></h1>
+          <p class="eyebrow">EXACT ARITHMETIC / LOCAL VERIFICATION</p>
+          <h1 id="title">Linear-system certificate checker</h1>
           <p class="lede">
-            Check dense or sparse linear equations with exact arithmetic. Bound every component, decide your threshold, and send a checker that runs without your solver.
+            Check the stored equations. Inspect the component bounds and threshold decision. Export a checker that runs without the original solver.
           </p>
-          <a class="start-link" href="#workbench">Try the captured example ↓</a>
+          <a class="start-link" href="#workbench">Choose a certificate ↓</a>
         </div>
-        <aside class="principle" aria-label="Verification principle">
-          <p class="eyebrow">400 CELLS. NO DENSE INVERSE.</p>
-          <div class="equation">A x<span class="star">*</span> = b</div>
-          <div class="equation small">
-            |xᵢ − xᵢ<span class="star">*</span>| ≤ wᵢ τ
-          </div>
-          <p>
-            The NIST FiPy example supplies 1,920 stored coefficients. Certloom checks positive weighted dominance gaps and exact residuals. The original solver is not needed to verify the handoff.
-          </p>
-          <a href="./docs/method.html">Read the mathematical scope ↗</a>
-        </aside>
+
       </section>
       <section
         id="workbench"
@@ -58,11 +48,29 @@
             <span class="local-tag">STAYS IN THIS BROWSER</span>
           </div>
           <p class="muted">
-            Start with the captured NIST application below, then check its error bounds and threshold decision. More examples include altered answers and failed proof premises.
+            Start with the captured application and run the check. Open or paste your own certificate below.
           </p>
           <div id="examples" class="example-picker" aria-label="Prepared examples">
             <p class="muted">Loading examples…</p>
           </div>
+          <div class="run-actions">
+            <button id="verify" class="button primary" type="button" disabled>
+              Check with exact arithmetic
+              <span aria-hidden="true">→</span></button
+            ><button
+              id="cancel"
+              class="button secondary"
+              type="button"
+              disabled
+            >
+              Cancel
+            </button>
+          </div>
+          <p id="activity" role="status" aria-live="polite" class="activity">
+            Choose an example to begin. No account or runtime download.
+          </p>
+          <a id="inspect-result" class="result-jump" href="#result-title" hidden>Inspect the result ↓</a>
+          <p id="error" role="alert" class="error" hidden></p>
           <div class="input-actions">
             <label class="button secondary upload" for="certificate-file"
               >Open certificate<input
@@ -88,24 +96,6 @@
               refused. <a href="./docs/method.html">Format and limits</a>
             </p>
           </details>
-          <div class="run-actions">
-            <button id="verify" class="button primary" type="button" disabled>
-              Check with exact arithmetic
-              <span aria-hidden="true">→</span></button
-            ><button
-              id="cancel"
-              class="button secondary"
-              type="button"
-              disabled
-            >
-              Cancel
-            </button>
-          </div>
-          <p id="activity" role="status" aria-live="polite" class="activity">
-            Choose an example to begin. No account or runtime download.
-          </p>
-          <a id="inspect-result" class="result-jump" href="#result-title" hidden>Inspect the result ↓</a>
-          <p id="error" role="alert" class="error" hidden></p>
         </div>
         <section class="result-panel" aria-labelledby="result-title">
           <div class="section-head">
@@ -113,19 +103,14 @@
             <h2 id="result-title" tabindex="-1">Inspect the evidence</h2>
           </div>
           <div id="empty" class="empty">
-            <span class="empty-symbol" aria-hidden="true"
-              >[ x − r, x + r ]</span
-            >
-            <h3>The interval decides.</h3>
-            <p>
-              A verified system can still have a wide error bound. A threshold
-              is established only when the entire interval lies on the required
-              side.
-            </p>
-            <div class="legend">
-              <span>Candidate</span><span>Certified enclosure</span
-              ><span>Separate decision</span>
-            </div>
+            <p class="eyebrow">CHECK NOT RUN</p>
+            <h3>No checked enclosure</h3>
+            <dl class="pending-evidence">
+              <div><dt>Proof premise</dt><dd>Not checked</dd></div>
+              <div><dt>Component bounds</dt><dd>No enclosure yet</dd></div>
+              <div><dt>Threshold decision</dt><dd>Requires a certified interval</dd></div>
+            </dl>
+            <p>Choose a certificate and run the exact check. A valid enclosure may still be too wide to decide the threshold.</p>
           </div>
           <div id="result" hidden>
             <div id="verdict" class="verdict">
@@ -233,6 +218,7 @@
                   checker, this receipt and instructions. Standard library only;
                   no installation.
                 </p>
+                <code class="checker-command">python3 -I -S checker.py certificate.json</code>
               </div>
               <div class="export-buttons">
                 <button
@@ -270,9 +256,21 @@
           </div>
         </section>
       </section>
-      <section class="scope">
-        <h2>Certify the equations.<br />Keep the assumptions visible.</h2>
+      <section class="scope" aria-label="Method and limits">
+        <aside class="principle" aria-label="Verification principle">
+          <p class="eyebrow">REFERENCE CASE / 400 CELLS</p>
+          <div class="equation">A x<span class="star">*</span> = b</div>
+          <div class="equation small">
+            |xᵢ − xᵢ<span class="star">*</span>| ≤ wᵢ τ
+          </div>
+          <p>
+            The captured NIST FiPy system has 1,920 stored coefficients. Positive weighted gaps and exact residuals establish its enclosure without a dense inverse.
+          </p>
+          <a href="./docs/method.html">Read the mathematical scope ↗</a>
+        </aside>
+
         <div>
+          <h2>Method &amp; limits</h2>
           <p>
             Sparse certificates use positive weights and strict weighted diagonal dominance. Dense certificates use an approximate inverse and a contraction bound. Both recompute their premises and residuals with exact integers and fractions. A failed premise refuses the enclosure; an inconclusive interval leaves the threshold undecidable.
           </p>

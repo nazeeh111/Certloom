@@ -8,7 +8,7 @@ Check a captured diffusion result in your browser, download its equations and er
 
 ## Try the complete handoff
 
-1. **Check in the browser.** Choose **FiPy · steady state**, then **Check with exact arithmetic**. Inspect the bounds on all 400 solution components and the separate threshold decision.
+1. **Check in the browser.** Choose **FiPy · final transient**, then **Check with exact arithmetic**. Inspect the bounds on all 400 solution components and the separate threshold decision.
 2. **Export the evidence.** Choose **Download portable proof .zip**. The bundle contains the input, result, standalone checker and instructions.
 3. **Verify elsewhere.** Extract the ZIP into a new directory and run the command below there. Only Python 3.10+ and its standard library are needed; Certloom itself does not need to be installed.
 
