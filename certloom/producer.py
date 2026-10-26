@@ -14,6 +14,20 @@ from .engine import (
 )
 
 
+def _encode(value):
+    if isinstance(value, bool):
+        raise VerificationError("Boolean coefficients are unsupported.")
+    try:
+        value = float(value)
+    except (TypeError, ValueError, OverflowError) as error:
+        raise VerificationError(
+            "Coefficients must convert to finite binary64."
+        ) from error
+    if not math.isfinite(value):
+        raise VerificationError("Coefficients must convert to finite binary64.")
+    return value.hex()
+
+
 def make_certificate(A, b, x, R, decision=None):
     """Solver independent. Conversion to binary64 is explicit, not exact decimal input."""
     try:
@@ -27,25 +41,12 @@ def make_certificate(A, b, x, R, decision=None):
             "Supply finite arrays with known dimensions."
         ) from error
 
-    def encode(value):
-        if isinstance(value, bool):
-            raise VerificationError("Boolean coefficients are unsupported.")
-        try:
-            value = float(value)
-        except (TypeError, ValueError, OverflowError) as error:
-            raise VerificationError(
-                "Coefficients must convert to finite binary64."
-            ) from error
-        if not math.isfinite(value):
-            raise VerificationError("Coefficients must convert to finite binary64.")
-        return value.hex()
-
     document = {
         "format": "certloom-linear-v1",
-        "A": [[encode(v) for v in row] for row in A],
-        "R": [[encode(v) for v in row] for row in R],
-        "b": [encode(v) for v in b],
-        "x": [encode(v) for v in x],
+        "A": [[_encode(v) for v in row] for row in A],
+        "R": [[_encode(v) for v in row] for row in R],
+        "b": [_encode(v) for v in b],
+        "x": [_encode(v) for v in x],
         "decision": None,
     }
     if decision is not None:
@@ -53,7 +54,7 @@ def make_certificate(A, b, x, R, decision=None):
             raise VerificationError("Decision requires index and above.")
         document["decision"] = {
             "index": decision["index"],
-            "above": encode(decision["above"]),
+            "above": _encode(decision["above"]),
         }
     return load_document(json.dumps(document))
 
@@ -89,30 +90,17 @@ def make_sparse_certificate(indptr, indices, data, b, x, weights, decision=None)
             )
         return operator.index(value)
 
-    def encode(value):
-        if isinstance(value, bool):
-            raise VerificationError("Boolean coefficients are unsupported.")
-        try:
-            value = float(value)
-        except (TypeError, ValueError, OverflowError) as error:
-            raise VerificationError(
-                "Coefficients must convert to finite binary64."
-            ) from error
-        if not math.isfinite(value):
-            raise VerificationError("Coefficients must convert to finite binary64.")
-        return value.hex()
-
     document = {
         "format": "certloom-sparse-dd-v1",
         "A": {
             "dimension": n,
             "indptr": [index(v) for v in indptr],
             "indices": [index(v) for v in indices],
-            "data": [encode(v) for v in data],
+            "data": [_encode(v) for v in data],
         },
-        "b": [encode(v) for v in b],
-        "x": [encode(v) for v in x],
-        "weights": [encode(v) for v in weights],
+        "b": [_encode(v) for v in b],
+        "x": [_encode(v) for v in x],
+        "weights": [_encode(v) for v in weights],
         "decision": None,
     }
     if decision is not None:
@@ -120,6 +108,6 @@ def make_sparse_certificate(indptr, indices, data, b, x, weights, decision=None)
             raise VerificationError("Decision requires index and above.")
         document["decision"] = {
             "index": index(decision["index"]),
-            "above": encode(decision["above"]),
+            "above": _encode(decision["above"]),
         }
     return load_document(json.dumps(document))

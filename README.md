@@ -121,7 +121,7 @@ The FiPy fixtures come from one execution of the unchanged [NIST example](https:
 
 [FiPy provenance](examples/fipy-provenance.json) records source, capture, hashes, controls and scope. The [unchanged source](examples/fipy-mesh20x20.py), [NIST terms](examples/FIPY-TERMS.txt) and [attribution](examples/FIPY-NOTICE.txt) accompany the data. FiPy produces these examples; it is not a package or checker dependency. Original dense fixtures and their separate analytic/rational checks remain documented in [examples/manifest.json](examples/manifest.json) and [examples/validation.json](examples/validation.json).
 
-[INTLAB 14.1](https://www.tuhh.de/ti3/rump/intlab/) already provides broader sparse verified solves. [FLINT/Arb](https://flintlib.org/doc/index_arb.html) provides rigorous ball arithmetic, including uncertain inputs and adjustable precision. Certloom focuses on a solver-independent portable handoff and two separately implemented checkers. It does not claim new mathematics or replace these environments.
+Certloom uses established mathematics for a solver-independent portable handoff with two separately implemented checkers.
 
 ## Develop
 
