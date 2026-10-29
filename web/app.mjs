@@ -559,7 +559,6 @@ async function init() {
         undefined,
         MAX_BYTES,
       );
-      const notice = await boundedFetch(new URL("./examples/FIPY-NOTICE.txt", import.meta.url), undefined, 65536);
       const terms = await boundedFetch(new URL("./examples/FIPY-TERMS.txt", import.meta.url), undefined, 65536);
       if (generation !== revision || current !== evidence) return;
       const checkerHash = await hash(checker);
@@ -573,7 +572,7 @@ async function init() {
         },
         { name: "verification.json", bytes: receipt(evidence) },
         { name: "README.txt", bytes: encoder.encode(instructions) },
-        { name: "NOTICES.txt", bytes: encoder.encode(new TextDecoder().decode(notice) + "\n" + new TextDecoder().decode(terms)) },
+        { name: "LICENSE-FIPY.txt", bytes: terms },
       ]);
       download(archive, "certloom-proof.zip", "application/zip");
       activity(
