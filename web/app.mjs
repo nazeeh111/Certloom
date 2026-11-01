@@ -349,7 +349,7 @@ async function init() {
     $("verdict").classList.toggle("refused", !certified);
     setText(
       "status-kicker",
-      certified ? "EXACT STORED-SYSTEM CLAIM" : "PROOF PREMISE FAILED",
+      certified ? "Exact stored-system claim" : "Proof premise failed",
     );
     setText(
       "status-title",
@@ -563,7 +563,7 @@ async function init() {
       if (generation !== revision || current !== evidence) return;
       const checkerHash = await hash(checker);
       if (generation !== revision || current !== evidence) return;
-      const instructions = `Certloom portable verification\n==============================\n\nFrom this directory, run:\n  python3 -I -S checker.py certificate.json\n\nOnly the Python standard library is required. No API, uploaded code or external solver is used. Compare the checker output with the result field in verification.json. Exit 0 means an enclosure is certified, 3 means the proof premise failed, 2 means invalid input or a file error. Threshold verdicts remain separate.\n\nCertificate SHA-256: ${evidence.certificateHash}\nChecker SHA-256: ${checkerHash}\nThese identify bytes, not source authenticity.\n\nThe claim concerns only the exact stored binary64 linear equations. It does not establish physical model correctness, measurement quality or a solver's reliability. A certified interval may be wide; a threshold may remain undecidable.\n\nSource and method: https://github.com/nazeeh111/Certloom\nOriginal code: MIT. Mathematical foundations and scope are documented in the repository.\n`;
+      const instructions = `Enclose portable verification\n==============================\n\nFrom this directory, run:\n  python3 -I -S checker.py certificate.json\n\nOnly the Python standard library is required. No API, uploaded code or external solver is used. Compare the checker output with the result field in verification.json. Exit 0 means an enclosure is certified, 3 means the proof premise failed, 2 means invalid input or a file error. Threshold verdicts remain separate.\n\nCertificate SHA-256: ${evidence.certificateHash}\nChecker SHA-256: ${checkerHash}\nThese identify bytes, not source authenticity.\n\nThe claim concerns only the exact stored binary64 linear equations. It does not establish physical model correctness, measurement quality or a solver's reliability. A certified interval may be wide; a threshold may remain undecidable.\n\nSource and method: https://github.com/nazeeh111/Certloom\nOriginal code: MIT. Mathematical foundations and scope are documented in the repository.\n`;
       const archive = zipStored([
         { name: "checker.py", bytes: checker },
         {
@@ -601,13 +601,13 @@ async function init() {
     $("examples").replaceChildren();
     const startLabel = document.createElement("p");
     startLabel.className = "example-start";
-    startLabel.textContent = "START HERE / CAPTURED APPLICATION";
+    startLabel.textContent = "Captured application";
     $("examples").append(startLabel);
     const more = document.createElement("details"),
       summary = document.createElement("summary"),
       comparisons = document.createElement("div");
     more.className = "more-examples";
-    summary.textContent = `Explore ${manifest.examples.length - 1} comparisons and failure controls`;
+    summary.textContent = `More examples (${manifest.examples.length - 1})`;
     comparisons.className = "examples";
     more.append(summary, comparisons);
     for (const example of manifest.examples) {

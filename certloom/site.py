@@ -32,7 +32,7 @@ def build(destination):
     put("LICENSE.txt", asset_directory("licenses").joinpath("LICENSE").read_bytes())
     put(
         "README.txt",
-        b"Certloom browser lab\nServe these files using localhost HTTP or HTTPS. Computation uses local BigInt arithmetic in a Web Worker; there is no CDN or computation service. file:// workers are unsupported. Examples include captured NIST FiPy linear equations and original dense mathematical systems, not hardware measurements. NIST notices and provenance accompany the FiPy data. Python checker artifacts verify the same input independently using only the standard library. Sources: https://github.com/nazeeh111/Certloom\n",
+        b"Enclose browser lab\nServe these files using localhost HTTP or HTTPS. Computation uses local BigInt arithmetic in a Web Worker; there is no CDN or computation service. file:// workers are unsupported. Examples include captured NIST FiPy linear equations and original dense mathematical systems, not hardware measurements. NIST notices and provenance accompany the FiPy data. Python checker artifacts verify the same input independently using only the standard library. Sources: https://github.com/nazeeh111/Certloom\n",
     )
     manifest = {"version": 1, "files": entries}
     with (destination / "source-manifest.json").open("x", encoding="utf-8") as stream:

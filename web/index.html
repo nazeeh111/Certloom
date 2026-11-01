@@ -11,7 +11,7 @@
       name="description"
       content="Check a numerical answer with exact arithmetic. Inspect rigorous solution bounds and export a portable, independently runnable certificate."
     />
-    <title>Certloom · Check the answer</title>
+    <title>Enclose · Check the answer</title>
     <link rel="stylesheet" href="./style.css" />
     <script type="module" src="./app.mjs"></script>
   </head>
@@ -19,19 +19,18 @@
     <a class="skip" href="#workbench">Skip to workbench</a>
     <header class="masthead">
       <a class="wordmark" href="./"
-        >Certloom<span class="mark" aria-hidden="true">[ ]</span></a
-      ><span class="edition">EXACT ARITHMETIC / LINEAR SYSTEMS</span
-      ><a href="https://github.com/nazeeh111/Certloom">Source ↗</a>
+        >Enclose<span class="mark" aria-hidden="true">[ ]</span></a
+      ><span class="edition">Exact arithmetic</span
+      ><a href="https://github.com/nazeeh111/Certloom">Source</a>
     </header>
     <main>
       <section class="intro" aria-labelledby="title">
         <div>
-          <p class="eyebrow">EXACT ARITHMETIC / LOCAL VERIFICATION</p>
-          <h1 id="title">Linear-system certificate checker</h1>
+          <h1 id="title">Check a linear-system solution.</h1>
           <p class="lede">
-            Check the stored equations. Inspect the component bounds and threshold decision. Export a checker that runs without the original solver.
+            Verify the stored equations. Inspect the bounds. Export the proof.
           </p>
-          <a class="start-link" href="#workbench">Choose a certificate ↓</a>
+          <a class="start-link" href="#workbench">Choose a certificate</a>
         </div>
 
       </section>
@@ -43,20 +42,15 @@
       >
         <div class="input-panel">
           <div class="section-head">
-            <span class="step">01</span>
-            <h2>Choose the claim</h2>
-            <span class="local-tag">STAYS IN THIS BROWSER</span>
+            <h2>Certificate</h2>
+            <span class="local-tag">Runs locally</span>
           </div>
-          <p class="muted">
-            Start with the captured application and run the check. Open or paste your own certificate below.
-          </p>
           <div id="examples" class="example-picker" aria-label="Prepared examples">
             <p class="muted">Loading examples…</p>
           </div>
           <div class="run-actions">
             <button id="verify" class="button primary" type="button" disabled>
-              Check with exact arithmetic
-              <span aria-hidden="true">→</span></button
+              Check certificate</button
             ><button
               id="cancel"
               class="button secondary"
@@ -67,9 +61,9 @@
             </button>
           </div>
           <p id="activity" role="status" aria-live="polite" class="activity">
-            Choose an example to begin. No account or runtime download.
+            Choose an example or open a certificate.
           </p>
-          <a id="inspect-result" class="result-jump" href="#result-title" hidden>Inspect the result ↓</a>
+          <a id="inspect-result" class="result-jump" href="#result-title" hidden>Inspect the result</a>
           <p id="error" role="alert" class="error" hidden></p>
           <div class="input-actions">
             <label class="button secondary upload" for="certificate-file"
@@ -82,7 +76,7 @@
             >
           </div>
           <details class="source-input">
-            <summary>Edit or paste certificate JSON</summary>
+            <summary>Paste or edit JSON</summary>
             <label for="certificate-text" class="sr-only"
               >Certificate JSON, maximum 2 MiB</label
             ><textarea
@@ -99,18 +93,12 @@
         </div>
         <section class="result-panel" aria-labelledby="result-title">
           <div class="section-head">
-            <span class="step">02</span>
-            <h2 id="result-title" tabindex="-1">Inspect the evidence</h2>
+            <h2 id="result-title" tabindex="-1">Result</h2>
           </div>
           <div id="empty" class="empty">
-            <p class="eyebrow">CHECK NOT RUN</p>
-            <h3>No checked enclosure</h3>
-            <dl class="pending-evidence">
-              <div><dt>Proof premise</dt><dd>Not checked</dd></div>
-              <div><dt>Component bounds</dt><dd>No enclosure yet</dd></div>
-              <div><dt>Threshold decision</dt><dd>Requires a certified interval</dd></div>
-            </dl>
-            <p>Choose a certificate and run the exact check. A valid enclosure may still be too wide to decide the threshold.</p>
+            <div class="empty-equation" aria-hidden="true">A x = b</div>
+            <h3>No certificate checked.</h3>
+            <p>Choose a certificate, then check its bounds.</p>
           </div>
           <div id="result" hidden>
             <div id="verdict" class="verdict">
@@ -150,7 +138,7 @@
               hidden
               aria-labelledby="decision-title"
             >
-              <p class="eyebrow">YOUR THRESHOLD</p>
+              <p class="eyebrow">Threshold decision</p>
               <h4 id="decision-title"></h4>
               <p id="decision-copy"></p>
               <dl class="threshold-details">
@@ -170,7 +158,7 @@
             </section>
             <div id="vectors" hidden>
               <div class="vector-head">
-                <h4>Every component, accounted for</h4>
+                <h4>Component bounds</h4>
                 <span id="dimension" class="mono"></span>
               </div>
               <p class="micro">
@@ -211,12 +199,10 @@
             </details>
             <div class="export-area">
               <div>
-                <span class="step">03</span>
-                <h4>Take the evidence with you</h4>
+                <h4>Portable proof</h4>
                 <p class="micro">
-                  The ZIP pairs these exact input bytes with a standalone Python
-                  checker, this receipt and instructions. Standard library only;
-                  no installation.
+                  Input, receipt and a standalone Python checker.
+                  Standard library only; no installation.
                 </p>
                 <code class="checker-command">python3 -I -S checker.py certificate.json</code>
               </div>
@@ -227,14 +213,14 @@
                   class="button primary"
                   disabled
                 >
-                  Download portable proof .zip ↓</button
+                  Download proof .zip</button
                 ><button
                   id="download-receipt"
                   type="button"
                   class="button secondary"
                   disabled
                 >
-                  Verification .json ↓
+                  Verification .json
                 </button>
               </div>
             </div>
@@ -257,8 +243,11 @@
         </section>
       </section>
       <section class="scope" aria-label="Method and limits">
+        <details class="scope-disclosure">
+          <summary>Method, limits and provenance</summary>
+          <div class="scope-content">
         <aside class="principle" aria-label="Verification principle">
-          <p class="eyebrow">REFERENCE CASE / 400 CELLS</p>
+          <p class="reference-label">Reference case: 400 cells</p>
           <div class="equation">A x<span class="star">*</span> = b</div>
           <div class="equation small">
             |xᵢ − xᵢ<span class="star">*</span>| ≤ wᵢ τ
@@ -266,7 +255,7 @@
           <p>
             The captured NIST FiPy system has 1,920 stored coefficients. Positive weighted gaps and exact residuals establish its enclosure without a dense inverse.
           </p>
-          <a href="./docs/method.html">Read the mathematical scope ↗</a>
+          <a href="./docs/method.html">Read the mathematical scope</a>
         </aside>
 
         <div>
@@ -281,15 +270,17 @@
             do not run from a file:// page.
           </p>
           <a href="./docs/method.html"
-            >Method, boundaries and mathematical foundations ↗</a
+            >Mathematical foundations</a
           >
         </div>
+          </div>
+        </details>
       </section>
     </main>
     <footer>
-      <span>Certloom / an answer you can check.</span
-      ><a href="https://github.com/nazeeh111/Certloom">Code &amp; releases ↗</a
-      ><span>Original code · MIT / FiPy example · NIST terms</span>
+      <span>Enclose</span
+      ><a href="https://github.com/nazeeh111/Certloom">Code &amp; releases</a
+      ><span>Original code: MIT. FiPy example: NIST terms.</span>
     </footer>
   </body>
 </html>
