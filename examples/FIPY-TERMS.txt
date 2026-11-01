@@ -30,3 +30,8 @@ SOFTWARE OR SERVICES PROVIDED HEREUNDER.
 .. _National Institute of Standards and Technology: http://www.nist.gov/
 .. _NIST: http://www.nist.gov/
 .. _title 17 United States Code Section 105: https://www.copyright.gov/title17/92chap1.html#105
+
+
+---
+
+The fipy-*.json examples derive from the NIST FiPy example reproduced unchanged as fipy-mesh20x20.py. NIST authors and terms are retained in FIPY-TERMS.txt. The original Certloom software license does not replace those terms. See fipy-provenance.json for source identity, capture procedure, numerical runtime, altered controls and scope.

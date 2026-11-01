@@ -431,7 +431,7 @@ def decimal_bound(rational, places=18, direction="lower"):
     return sign + digits[:-places] + "." + digits[-places:]
 
 
-# Created with Certloom: https://github.com/nazeeh111/Certloom
+# Created with Enclose: https://github.com/nazeeh111/Certloom
 # MIT License
 # 
 # Copyright (c) 2026 Nazeeh Abdul-Hadi

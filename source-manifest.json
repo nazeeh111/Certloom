@@ -3,18 +3,18 @@
   "files": [
     {
       "path": "app.mjs",
-      "bytes": 26631,
-      "sha256": "9eb03254b087cd514aa8a78e0c832007d51bf0b0ccd34095acaba9f87797fff7"
+      "bytes": 26398,
+      "sha256": "ec81c2be9122a2077e441545d5388bd505b61f1ad84af9d8702d71dd3cbb66af"
     },
     {
       "path": "index.html",
-      "bytes": 12873,
-      "sha256": "d52021848de440d1c51db0711cb4283aee39c89179b17a8aef6a9ff8f685026d"
+      "bytes": 11971,
+      "sha256": "27225fd86e632c2829a35e1eb9aa2d358c45b2fe6c081739845d916883c4b632"
     },
     {
       "path": "style.css",
-      "bytes": 16857,
-      "sha256": "2134d818e577af2533011c24c3bdc91e62c7382de98d9496bae36508b1934974"
+      "bytes": 15104,
+      "sha256": "ffe6f22fd20506a82e796556dc02c85304597066fc9d60c095ddbeb91498c019"
     },
     {
       "path": "verify.mjs",
@@ -27,14 +27,9 @@
       "sha256": "4049363bbed7959cb38e1f68c3f0fb81ad22c1dc4376f8bce7a0bb4705c6110c"
     },
     {
-      "path": "examples/FIPY-NOTICE.txt",
-      "bytes": 338,
-      "sha256": "eb76b0c011ab926ec0d1f2547da3e205bb59e3dbacbc8e0d0ed95ff4be36b9ac"
-    },
-    {
       "path": "examples/FIPY-TERMS.txt",
-      "bytes": 1878,
-      "sha256": "83c519e315a2da6c78aa822989e896358a870ebb51246b3049f671eb84b6f16e"
+      "bytes": 2223,
+      "sha256": "c4b505926291425592ec7b742bbf75b23c1aff0f0334119fe909fbe63af2f8aa"
     },
     {
       "path": "examples/fipy-altered-answer.json",
@@ -108,13 +103,13 @@
     },
     {
       "path": "docs/method.html",
-      "bytes": 10513,
-      "sha256": "9154d0e7b33352c2caa5943a5591877519300d99a95bf202d32ae1a3598773ca"
+      "bytes": 10479,
+      "sha256": "c001ab61f7a7d6019cfbf129a44f54561159468c30eca3eef67ce513f56f731c"
     },
     {
       "path": "checker.py",
-      "bytes": 19288,
-      "sha256": "e8ec6c48dd20f89313f2096c64d181536e2388aa587b012c7f64bfaca70c2048"
+      "bytes": 19287,
+      "sha256": "9eb5e9a31987cf7c09ac2f2f8fd2f938931fab6998c8da8670034cdd5e35fb76"
     },
     {
       "path": "LICENSE.txt",
@@ -123,8 +118,8 @@
     },
     {
       "path": "README.txt",
-      "bytes": 516,
-      "sha256": "f24271c76e3127fc5d38b1a06d0f7739e441c01c353f399d11eb248f5a7d6092"
+      "bytes": 515,
+      "sha256": "5fc79ab1d536a785d221073a186b6fa5b0f5c3e2ad054797163c4b2d7590b406"
     }
   ]
 }

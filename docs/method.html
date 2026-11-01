@@ -4,13 +4,13 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta http-equiv="Content-Security-Policy" content="default-src 'self'; object-src 'none'; base-uri 'self'">
-  <title>Certloom · What the checker proves</title>
+  <title>Enclose · What the checker proves</title>
   <link rel="stylesheet" href="../style.css">
   <link rel="stylesheet" href="./method.css">
 </head>
 <body>
 <main class="method-page">
-  <a href="../index.html">← Certloom</a>
+  <a href="../index.html">← Enclose</a>
   <h1>What the checker proves</h1>
   <p>A certificate stores a square real system A x* = b and a proposed answer x. Sparse certificates supply positive weights; dense certificates supply an approximate inverse. The exact represented binary64 values define the mathematical problem. Both checkers recompute the proof with integer arithmetic, independently of the producing solver.</p>
 
@@ -41,7 +41,7 @@
   <p>The final transient and subsequent steady systems were captured from one execution of NIST's unchanged two-dimensional patched-boundary diffusion example. Each has 400 cells and 1,920 matrix nonzeros. FiPy 4.0.3 produced the systems with NumPy 2.3.5 and SciPy 1.18.1; both original corner checks passed. All 400 enclosures were independently checked using exact fractions. The bottom-right corner enclosures lie within [0.99, 1.01] and establish the separate threshold above 0.98.</p>
   <p>The transient case uses unit weights. The steady case uses positive weights from one comparison-matrix solve. Replacing them with unit weights gives a zero minimum gap and a refused proof; altering the candidate corner to zero loses the threshold decision. These are labeled controls, not repaired application results.</p>
   <p>The standalone checker and browser need none of the producer's numerical libraries. The certificate proves only the stored linear system. In particular, the final transient right-hand side contains a previous approximate state: this does not bound accumulated time-stepping error, PDE discretization error or physical-model error.</p>
-  <p>The original source is pinned to <a href="https://github.com/usnistgov/fipy/blob/d8f038a0663d7b2b1c716761ae2eed0e57e1c7c2/examples/diffusion/mesh20x20.py">NIST FiPy commit d8f038a</a>. The accompanying <a href="../examples/fipy-provenance.json">provenance</a>, <a href="../examples/fipy-mesh20x20.py">unchanged source</a>, <a href="../examples/FIPY-TERMS.txt">terms</a> and <a href="../examples/FIPY-NOTICE.txt">attribution</a> describe the capture and preserve NIST's notices. No large-scale performance or outside adoption claim follows from this example.</p>
+  <p>The original source is pinned to <a href="https://github.com/usnistgov/fipy/blob/d8f038a0663d7b2b1c716761ae2eed0e57e1c7c2/examples/diffusion/mesh20x20.py">NIST FiPy commit d8f038a</a>. The accompanying <a href="../examples/fipy-provenance.json">provenance</a>, <a href="../examples/fipy-mesh20x20.py">unchanged source</a>, <a href="../examples/FIPY-TERMS.txt">terms and source attribution</a> describe the capture and preserve NIST's notices. No large-scale performance or outside adoption claim follows from this example.</p>
 
   <h2>Dense proof remains supported</h2>
   <p>The <code>certloom-linear-v1</code> root contains exactly <code>format</code>, <code>A</code>, <code>R</code>, <code>b</code>, <code>x</code> and <code>decision</code>. A and R are n-by-n arrays, b and x are length n, and n is from 1 to 128. The same canonical coefficient and decision rules apply. The producer API remains <code>make_certificate(A, b, x, R, decision=None)</code>.</p>
@@ -50,10 +50,10 @@
 
   <h2>Representation, limits and trust</h2>
   <p>Inputs are data-only UTF-8 JSON at most 2 MiB. Duplicate keys, extra fields, nonfinite or noncanonical coefficients, unsupported structures and expressions refuse. Uploaded code is never executed. The browser parser also bounds structure to 100,000 nodes and depth 8. A disposable Web Worker provides Cancel and a 20-second deadline; input changes revoke old claims and exports. The standalone command has no browser worker deadline.</p>
-  <p>Both modes certify exact represented equations, not coefficient uncertainty, intended decimals, measurements, source authenticity or solver execution. Python and JavaScript independently implement the exact calculation. The detached Python checker includes source and recomputes from input rather than trusting an exported receipt. Bundles retain the NIST attribution and terms in <code>NOTICES.txt</code>, separately from Certloom's MIT license. This is executable numerical verification, not a formal proof-assistant certificate. Inspect and trust the implementation accordingly. Source and input hashes identify bytes, not a trusted author.</p>
+  <p>Both modes certify exact represented equations, not coefficient uncertainty, intended decimals, measurements, source authenticity or solver execution. Python and JavaScript independently implement the exact calculation. The detached Python checker includes source and recomputes from input rather than trusting an exported receipt. Bundles retain the NIST attribution and terms in <code>LICENSE-FIPY.txt</code>, separately from Enclose's MIT license. This is executable numerical verification, not a formal proof-assistant certificate. Inspect and trust the implementation accordingly. Source and input hashes identify bytes, not a trusted author.</p>
 
   <h2>Established foundations</h2>
-  <p>Weighted diagonal dominance and inverse-contraction bounds are established numerical verification theory. <a href="https://www.tuhh.de/ti3/rump/intlab/">INTLAB 14.1</a> already provides broader sparse verified solves. <a href="https://flintlib.org/doc/index_arb.html">FLINT/Arb</a> provides rigorous ball arithmetic with adjustable precision and uncertain inputs. <a href="https://juliaintervals.github.io/IntervalLinearAlgebra.jl/stable/tutorials/linear_systems/">IntervalLinearAlgebra.jl</a> is another established environment. Certloom focuses on the source-bearing result artifact that a recipient can check without the producing solver; it does not invent these bounds or replace broader methods.</p>
+  <p>Weighted diagonal dominance and inverse-contraction bounds are established numerical verification theory. <a href="https://www.tuhh.de/ti3/rump/intlab/">INTLAB 14.1</a> already provides broader sparse verified solves. <a href="https://flintlib.org/doc/index_arb.html">FLINT/Arb</a> provides rigorous ball arithmetic with adjustable precision and uncertain inputs. <a href="https://juliaintervals.github.io/IntervalLinearAlgebra.jl/stable/tutorials/linear_systems/">IntervalLinearAlgebra.jl</a> is another established environment. Enclose focuses on the source-bearing result artifact that a recipient can check without the producing solver; it does not invent these bounds or replace broader methods.</p>
   <p><a href="https://github.com/nazeeh111/Certloom">Source and evidence</a>.</p>
 </main>
 </body>
