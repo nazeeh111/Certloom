@@ -23,7 +23,7 @@ def checker_source():
     """Exact engine source plus a bounded, ordinary standalone entry point."""
     source = Path(__file__).with_name("engine.py").read_text()
     license_text = asset_directory("licenses").joinpath("LICENSE").read_text()
-    source += "\n\n# Created with Certloom: https://github.com/nazeeh111/Certloom\n"
+    source += "\n\n# Created with Enclose: https://github.com/nazeeh111/Certloom\n"
     source += "\n".join("# " + line for line in license_text.splitlines()) + "\n"
     source += """
 if __name__ == "__main__":
@@ -74,7 +74,7 @@ def bundle_members(text):
         .joinpath("FIPY-TERMS.txt")
         .read_bytes(),
         "verification.json": (json.dumps(receipt, indent=2) + "\n").encode(),
-        "README.txt": b"Certloom numerical result artifact\n\nRun python3 -I -S checker.py certificate.json. Only the Python standard library is needed. Compare the checker output with the result field of verification.json. Exit 0 means an enclosure is certified, 3 means the proof premise failed, 2 means invalid input or a file error. The checker recomputes the claim from the stored matrix, right-hand side, proposed answer and proof witness (positive weights for sparse mode, approximate inverse for dense mode). A wide valid enclosure is not necessarily an accurate answer; threshold decisions are separate. This checks the exact represented binary64 equations, not physical model truth, measurements or producer authenticity. Source and method: https://github.com/nazeeh111/Certloom .\n",
+        "README.txt": b"Enclose numerical result artifact\n\nRun python3 -I -S checker.py certificate.json. Only the Python standard library is needed. Compare the checker output with the result field of verification.json. Exit 0 means an enclosure is certified, 3 means the proof premise failed, 2 means invalid input or a file error. The checker recomputes the claim from the stored matrix, right-hand side, proposed answer and proof witness (positive weights for sparse mode, approximate inverse for dense mode). A wide valid enclosure is not necessarily an accurate answer; threshold decisions are separate. This checks the exact represented binary64 equations, not physical model truth, measurements or producer authenticity. Source and method: https://github.com/nazeeh111/Certloom .\n",
     }
     files["SHA256SUMS"] = "".join(
         sha256(data).hexdigest() + "  " + name + "\n"

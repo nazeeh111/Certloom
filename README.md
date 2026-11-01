@@ -1,4 +1,4 @@
-# Certloom
+# Enclose
 
 **Send a numerical answer that someone else can check.**
 
@@ -10,7 +10,7 @@ Check a captured diffusion result in your browser, download its equations and er
 
 1. **Check in the browser.** Choose **FiPy · final transient**, then **Check with exact arithmetic**. Inspect the bounds on all 400 solution components and the separate threshold decision.
 2. **Export the evidence.** Choose **Download portable proof .zip**. The bundle contains the input, result, standalone checker and instructions.
-3. **Verify elsewhere.** Extract the ZIP into a new directory and run the command below there. Only Python 3.10+ and its standard library are needed; Certloom itself does not need to be installed.
+3. **Verify elsewhere.** Extract the ZIP into a new directory and run the command below there. Only Python 3.10+ and its standard library are needed; Enclose itself does not need to be installed.
 
 ```sh
 python3 -I -S checker.py certificate.json
@@ -33,11 +33,13 @@ Open the lab and choose **FiPy · final transient**. These are the actual equati
 
 Choose **FiPy · steady state** to check the subsequent steady solve. Both matrices have 400 rows and 1,920 nonzeros. The steady case uses nonuniform positive weights. **When weights fail** supplies unit weights for that same system: the minimum dominance gap is zero, so this proof refuses. **A changed answer** replaces a candidate component with zero: the wider valid enclosure cannot establish the original threshold. A certified enclosure and a useful decision are separate outcomes.
 
-Proof bundles retain the NIST attribution and terms in `LICENSE-FIPY.txt`, separate from Certloom's MIT license. The ready-to-check proof linked above contains the steady-state example.
+Proof bundles retain the NIST attribution and terms in `LICENSE-FIPY.txt`, separate from Enclose's MIT license. The ready-to-check proof linked above contains the steady-state example.
 
 This verifies the **exact stored binary64 linear system**. The final transient right-hand side includes a previous approximate time state. It does not certify accumulated time-stepping error, PDE discretization accuracy or physical measurements.
 
 ## Install or use the source
+
+Enclose is the product name. The Python package, imports and command remain `certloom` for compatibility; the existing repository and release links still use `Certloom`.
 
 Python 3.10 or later. Download `certloom-0.2.0-py3-none-any.whl` and install without runtime dependencies:
 
@@ -121,7 +123,7 @@ The FiPy fixtures come from one execution of the unchanged [NIST example](https:
 
 [FiPy provenance](examples/fipy-provenance.json) records source, capture, hashes, controls and scope. The [unchanged source](examples/fipy-mesh20x20.py) and [NIST terms and source attribution](examples/FIPY-TERMS.txt) accompany the data. FiPy produces these examples; it is not a package or checker dependency. Original dense fixtures and their separate analytic/rational checks remain documented in [examples/manifest.json](examples/manifest.json) and [examples/validation.json](examples/validation.json).
 
-Certloom uses established mathematics for a solver-independent portable handoff with two separately implemented checkers.
+Enclose uses established mathematics for a solver-independent portable handoff with two separately implemented checkers.
 
 ## Develop
 

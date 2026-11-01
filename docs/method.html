@@ -4,13 +4,13 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta http-equiv="Content-Security-Policy" content="default-src 'self'; object-src 'none'; base-uri 'self'">
-  <title>Certloom · What the checker proves</title>
+  <title>Enclose · What the checker proves</title>
   <link rel="stylesheet" href="../style.css">
   <link rel="stylesheet" href="./method.css">
 </head>
 <body>
 <main class="method-page">
-  <a href="../index.html">← Certloom</a>
+  <a href="../index.html">← Enclose</a>
   <h1>What the checker proves</h1>
   <p>A certificate stores a square real system A x* = b and a proposed answer x. Sparse certificates supply positive weights; dense certificates supply an approximate inverse. The exact represented binary64 values define the mathematical problem. Both checkers recompute the proof with integer arithmetic, independently of the producing solver.</p>
 
@@ -50,10 +50,10 @@
 
   <h2>Representation, limits and trust</h2>
   <p>Inputs are data-only UTF-8 JSON at most 2 MiB. Duplicate keys, extra fields, nonfinite or noncanonical coefficients, unsupported structures and expressions refuse. Uploaded code is never executed. The browser parser also bounds structure to 100,000 nodes and depth 8. A disposable Web Worker provides Cancel and a 20-second deadline; input changes revoke old claims and exports. The standalone command has no browser worker deadline.</p>
-  <p>Both modes certify exact represented equations, not coefficient uncertainty, intended decimals, measurements, source authenticity or solver execution. Python and JavaScript independently implement the exact calculation. The detached Python checker includes source and recomputes from input rather than trusting an exported receipt. Bundles retain the NIST attribution and terms in <code>LICENSE-FIPY.txt</code>, separately from Certloom's MIT license. This is executable numerical verification, not a formal proof-assistant certificate. Inspect and trust the implementation accordingly. Source and input hashes identify bytes, not a trusted author.</p>
+  <p>Both modes certify exact represented equations, not coefficient uncertainty, intended decimals, measurements, source authenticity or solver execution. Python and JavaScript independently implement the exact calculation. The detached Python checker includes source and recomputes from input rather than trusting an exported receipt. Bundles retain the NIST attribution and terms in <code>LICENSE-FIPY.txt</code>, separately from Enclose's MIT license. This is executable numerical verification, not a formal proof-assistant certificate. Inspect and trust the implementation accordingly. Source and input hashes identify bytes, not a trusted author.</p>
 
   <h2>Established foundations</h2>
-  <p>Weighted diagonal dominance and inverse-contraction bounds are established numerical verification theory. <a href="https://www.tuhh.de/ti3/rump/intlab/">INTLAB 14.1</a> already provides broader sparse verified solves. <a href="https://flintlib.org/doc/index_arb.html">FLINT/Arb</a> provides rigorous ball arithmetic with adjustable precision and uncertain inputs. <a href="https://juliaintervals.github.io/IntervalLinearAlgebra.jl/stable/tutorials/linear_systems/">IntervalLinearAlgebra.jl</a> is another established environment. Certloom focuses on the source-bearing result artifact that a recipient can check without the producing solver; it does not invent these bounds or replace broader methods.</p>
+  <p>Weighted diagonal dominance and inverse-contraction bounds are established numerical verification theory. <a href="https://www.tuhh.de/ti3/rump/intlab/">INTLAB 14.1</a> already provides broader sparse verified solves. <a href="https://flintlib.org/doc/index_arb.html">FLINT/Arb</a> provides rigorous ball arithmetic with adjustable precision and uncertain inputs. <a href="https://juliaintervals.github.io/IntervalLinearAlgebra.jl/stable/tutorials/linear_systems/">IntervalLinearAlgebra.jl</a> is another established environment. Enclose focuses on the source-bearing result artifact that a recipient can check without the producing solver; it does not invent these bounds or replace broader methods.</p>
   <p><a href="https://github.com/nazeeh111/Certloom">Source and evidence</a>.</p>
 </main>
 </body>
