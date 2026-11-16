@@ -186,6 +186,16 @@ export function zipStored(files) {
   return archive;
 }
 
+export async function zipWithChecksums(files) {
+  const sorted = [...files].sort((a, b) => a.name < b.name ? -1 : a.name > b.name ? 1 : 0);
+  const lines = [];
+  for (const file of sorted) {
+    const digest = new Uint8Array(await crypto.subtle.digest("SHA-256", file.bytes));
+    lines.push([...digest].map(x => x.toString(16).padStart(2, "0")).join("") + "  " + file.name + "\n");
+  }
+  return zipStored([...files, {name: "SHA256SUMS", bytes: encoder.encode(lines.join(""))}]);
+}
+
 function midpoint(lower, upper) {
   const ln = BigInt(lower.numerator),
     ld = BigInt(lower.denominator);
@@ -202,6 +212,18 @@ function midpoint(lower, upper) {
   };
 }
 
+export function shouldFocusResult({initiatedOnControl, activeIsControl, activeIsBody, interactionUnchanged, documentHasFocus}) {
+  return documentHasFocus && initiatedOnControl && interactionUnchanged && (activeIsControl || activeIsBody);
+}
+
+export function handoffResultFocus({doc, control, target, initiatedOnControl, interactionUnchanged}) {
+  if (shouldFocusResult({initiatedOnControl, activeIsControl: doc.activeElement === control, activeIsBody: doc.activeElement === doc.body, interactionUnchanged, documentHasFocus: doc.hasFocus()})) {
+    target.focus({preventScroll: true});
+    return true;
+  }
+  return false;
+}
+
 async function init() {
   const { decimalBound } = await import("./verify.mjs");
   const $ = (id) => document.getElementById(id);
@@ -211,6 +233,9 @@ async function init() {
     makeWorker: () =>
       new Worker(new URL("./worker.mjs", import.meta.url), { type: "module" }),
   });
+  let interactionRevision = 0;
+  for (const event of ["pointerdown", "keydown", "focusin"])
+    document.addEventListener(event, () => { interactionRevision++; }, true);
   let revision = 0,
     current = null,
     selected = null,
@@ -480,6 +505,8 @@ async function init() {
   }
   $("verify").addEventListener("click", async () => {
     if (verifier.busy) return;
+    const initiatedOnControl = document.activeElement === $("verify");
+    const interactionAtStart = interactionRevision;
     invalidate("Checking exact equations in a local worker…");
     const generation = revision,
       certificate = textInput.value;
@@ -494,6 +521,7 @@ async function init() {
       current = { certificate, certificateHash, result };
       setText("certificate-hash", certificateHash);
       $("inspect-result").hidden = false;
+      handoffResultFocus({doc: document, control: $("verify"), target: $("result-title"), initiatedOnControl, interactionUnchanged: interactionRevision === interactionAtStart});
       activity(
         result.status === "certified"
           ? `Exact check complete. ${result.decision ? $("decision-title").textContent : "Inspect the certified error bounds."}`
@@ -563,8 +591,8 @@ async function init() {
       if (generation !== revision || current !== evidence) return;
       const checkerHash = await hash(checker);
       if (generation !== revision || current !== evidence) return;
-      const instructions = `Enclose portable verification\n==============================\n\nFrom this directory, run:\n  python3 -I -S checker.py certificate.json\n\nOnly the Python standard library is required. No API, uploaded code or external solver is used. Compare the checker output with the result field in verification.json. Exit 0 means an enclosure is certified, 3 means the proof premise failed, 2 means invalid input or a file error. Threshold verdicts remain separate.\n\nCertificate SHA-256: ${evidence.certificateHash}\nChecker SHA-256: ${checkerHash}\nThese identify bytes, not source authenticity.\n\nThe claim concerns only the exact stored binary64 linear equations. It does not establish physical model correctness, measurement quality or a solver's reliability. A certified interval may be wide; a threshold may remain undecidable.\n\nSource and method: https://github.com/nazeeh111/Certloom\nOriginal code: MIT. Mathematical foundations and scope are documented in the repository.\n`;
-      const archive = zipStored([
+      const instructions = `Certloom portable verification\n==============================\n\nWith a separately installed trusted Certloom, run:\n  certloom verify-bundle certloom-proof.zip\n\nThe ZIP member checker is not executed by verify-bundle. If you choose to extract and run checker.py, first establish trust in that file; then run python3 -I -S checker.py certificate.json and compare its output with verification.json. Exit 0 means an enclosure is certified, 3 means the proof premise failed, 2 means invalid input or a file error. Threshold verdicts remain separate.\n\nCertificate SHA-256: ${evidence.certificateHash}\nChecker SHA-256: ${checkerHash}\nThese identify bytes, not source authenticity.\n\nThe claim concerns only the exact stored binary64 linear equations. It does not establish physical model correctness, measurement quality or a solver's reliability. A certified interval may be wide; a threshold may remain undecidable.\n\nSource and method: https://github.com/nazeeh111/Certloom\nOriginal code: MIT. Mathematical foundations and scope are documented in the repository.\n`;
+      const archive = await zipWithChecksums([
         { name: "checker.py", bytes: checker },
         {
           name: "certificate.json",
@@ -574,6 +602,7 @@ async function init() {
         { name: "README.txt", bytes: encoder.encode(instructions) },
         { name: "LICENSE-FIPY.txt", bytes: terms },
       ]);
+      if (generation !== revision || current !== evidence) return;
       download(archive, "certloom-proof.zip", "application/zip");
       activity(
         "Portable proof exported. Its Python checker can independently recompute this claim.",

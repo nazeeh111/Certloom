@@ -3,18 +3,18 @@
   "files": [
     {
       "path": "app.mjs",
-      "bytes": 26398,
-      "sha256": "ec81c2be9122a2077e441545d5388bd505b61f1ad84af9d8702d71dd3cbb66af"
+      "bytes": 28152,
+      "sha256": "0d604f1fa461320882b232eba907d72a8b5fca0b1e6cd7466cedf8ac92198558"
     },
     {
       "path": "index.html",
-      "bytes": 11971,
-      "sha256": "27225fd86e632c2829a35e1eb9aa2d358c45b2fe6c081739845d916883c4b632"
+      "bytes": 12166,
+      "sha256": "479dfb22f71bd4a65e07611e5fca5a0e812d6868b19ec7f774fc44bae4b79724"
     },
     {
       "path": "style.css",
-      "bytes": 15104,
-      "sha256": "ffe6f22fd20506a82e796556dc02c85304597066fc9d60c095ddbeb91498c019"
+      "bytes": 15175,
+      "sha256": "9abc6747ed03a5d869eb1f7013fcdefe6562c240de21e573cbaf642f4c8ea566"
     },
     {
       "path": "verify.mjs",
@@ -103,8 +103,8 @@
     },
     {
       "path": "docs/method.html",
-      "bytes": 10479,
-      "sha256": "c001ab61f7a7d6019cfbf129a44f54561159468c30eca3eef67ce513f56f731c"
+      "bytes": 10483,
+      "sha256": "be4b6435271d18f9e381486ef57dc072e2ee2f32534e2975a4496b34c5529bd0"
     },
     {
       "path": "checker.py",
@@ -118,8 +118,8 @@
     },
     {
       "path": "README.txt",
-      "bytes": 515,
-      "sha256": "5fc79ab1d536a785d221073a186b6fa5b0f5c3e2ad054797163c4b2d7590b406"
+      "bytes": 516,
+      "sha256": "f24271c76e3127fc5d38b1a06d0f7739e441c01c353f399d11eb248f5a7d6092"
     }
   ]
 }

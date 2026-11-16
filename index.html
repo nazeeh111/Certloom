@@ -11,7 +11,7 @@
       name="description"
       content="Check a numerical answer with exact arithmetic. Inspect rigorous solution bounds and export a portable, independently runnable certificate."
     />
-    <title>Enclose · Check the answer</title>
+    <title>Certloom · Check the answer</title>
     <link rel="stylesheet" href="./style.css" />
     <script type="module" src="./app.mjs"></script>
   </head>
@@ -19,7 +19,7 @@
     <a class="skip" href="#workbench">Skip to workbench</a>
     <header class="masthead">
       <a class="wordmark" href="./"
-        >Enclose<span class="mark" aria-hidden="true">[ ]</span></a
+        >Certloom<span class="mark" aria-hidden="true">[ ]</span></a
       ><span class="edition">Exact arithmetic</span
       ><a href="https://github.com/nazeeh111/Certloom">Source</a>
     </header>
@@ -45,7 +45,7 @@
             <h2>Certificate</h2>
             <span class="local-tag">Runs locally</span>
           </div>
-          <div id="examples" class="example-picker" aria-label="Prepared examples">
+          <div id="examples" class="example-picker" role="group" aria-label="Prepared examples">
             <p class="muted">Loading examples…</p>
           </div>
           <div class="run-actions">
@@ -166,7 +166,7 @@
                 for its authoritative exact fractions. Candidate decimals are
                 for orientation.
               </p>
-              <div class="component-navigation" aria-label="Component pages">
+              <div class="component-navigation" role="group" aria-label="Component pages">
                 <span id="component-page" class="mono" role="status"></span>
                 <button type="button" id="previous-components" class="button secondary">Previous 50</button>
                 <button type="button" id="next-components" class="button secondary">Next 50</button>
@@ -201,10 +201,10 @@
               <div>
                 <h4>Portable proof</h4>
                 <p class="micro">
-                  Input, receipt and a standalone Python checker.
-                  Standard library only; no installation.
+                  Input, receipt, checksums and a standalone Python checker. For an untrusted ZIP, verify with a separately installed Certloom.
                 </p>
-                <code class="checker-command">python3 -I -S checker.py certificate.json</code>
+                <code class="checker-command">certloom verify-bundle certloom-proof.zip</code>
+                <p class="micro">Checksums check consistency, not authorship. The check covers stored equations, not physical-model accuracy.</p>
               </div>
               <div class="export-buttons">
                 <button
@@ -278,7 +278,7 @@
       </section>
     </main>
     <footer>
-      <span>Enclose</span
+      <span>Certloom</span
       ><a href="https://github.com/nazeeh111/Certloom">Code &amp; releases</a
       ><span>Original code: MIT. FiPy example: NIST terms.</span>
     </footer>

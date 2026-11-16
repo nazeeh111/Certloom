@@ -128,10 +128,11 @@ progress::-webkit-progress-value { background: var(--evidence); }
 .component-navigation input { min-width: 0; width: 78px; min-height: 44px; padding: 8px; color: var(--ink); background: var(--surface-input); border: 1px solid var(--line); border-radius: 3px; font: 13px var(--mono); }
 .component-navigation .button { padding-inline: 10px; font-size: 13px; }
 .table-scroll { max-height: 410px; overflow: auto; border: 1px solid var(--line); }
-table { border-collapse: collapse; width: 100%; font: 13px/1.55 var(--mono); text-align: left; }
+table { border-collapse: collapse; width: 100%; min-width: 680px; font: 13px/1.55 var(--mono); text-align: left; }
 th { position: sticky; top: 0; background: var(--surface-raised); color: var(--secondary); font: 500 13px/1.4 var(--sans); padding: 12px; border-bottom: 1px solid var(--line); z-index: 1; }
 td { padding: 10px 12px; border-bottom: 1px solid var(--line-soft); vertical-align: top; overflow-wrap: anywhere; }
 td:first-child { color: var(--secondary); width: 60px; }
+tbody tr:not(.exact-row) td { white-space: nowrap; }
 tr.exact-row td { padding: 0; border-bottom: 1px solid var(--line); }
 .component-details { padding: 0 12px; }
 .component-details summary { padding: 8px 0; font: 13px/1.5 var(--sans); color: var(--secondary); cursor: pointer; }
