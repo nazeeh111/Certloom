@@ -6,7 +6,8 @@ import sys
 from pathlib import Path
 
 from . import __version__
-from .artifact import read_certificate, write_bundle
+from .artifact import read_certificate, verify_bundle, write_bundle
+from .publication import fresh_output
 from .engine import VerificationError, verify_text
 from .site import build
 
@@ -30,6 +31,8 @@ def main(argv=None):
     )
     bundle.add_argument("certificate")
     bundle.add_argument("--out", required=True)
+    bundle_verify = commands.add_parser("verify-bundle", help="Check a bundle using the installed trusted engine")
+    bundle_verify.add_argument("bundle")
     site = commands.add_parser(
         "build-site", help="Build a static browser lab into a new directory"
     )
@@ -44,14 +47,15 @@ def main(argv=None):
                 json.dumps(write_bundle(read_certificate(args.certificate), args.out))
             )
         else:
-            result = verify_text(read_certificate(args.certificate))
+            result = verify_bundle(args.bundle) if args.command == "verify-bundle" else verify_text(read_certificate(args.certificate))
             text = json.dumps(result, indent=2) + "\n"
-            if args.out:
-                with Path(args.out).open("x", encoding="utf-8") as stream:
-                    stream.write(text)
+            if getattr(args, "out", None):
+                with fresh_output(args.out) as stream:
+                    stream.write(text.encode("utf-8"))
             else:
                 sys.stdout.write(text)
-            if result["status"] != "certified":
+            verdict = result["result"] if args.command == "verify-bundle" else result
+            if verdict["status"] != "certified":
                 return 3
     except (VerificationError, OSError, UnicodeError) as error:
         print("Verification refused: " + str(error), file=sys.stderr)

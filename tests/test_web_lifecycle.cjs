@@ -6,12 +6,29 @@ const { pathToFileURL } = require("node:url");
 
 (async () => {
   const source = path.resolve(__dirname, "../web/app.mjs");
-  const { createVerifier, zipStored } = await import(pathToFileURL(source));
+  const { createVerifier, zipStored, shouldFocusResult, handoffResultFocus } = await import(pathToFileURL(source));
   const checks = [];
   function check(name, action) {
     action();
     checks.push(name);
   }
+  check("result focus only follows an unchanged initiated control", () => {
+    const original = {initiatedOnControl:true, activeIsControl:false, activeIsBody:true, interactionUnchanged:true, documentHasFocus:true};
+    assert.equal(shouldFocusResult(original), true);
+    assert.equal(shouldFocusResult({...original, interactionUnchanged:false}), false);
+    assert.equal(shouldFocusResult({...original, activeIsBody:false}), false);
+    assert.equal(shouldFocusResult({...original, initiatedOnControl:false}), false);
+    assert.equal(shouldFocusResult({...original, documentHasFocus:false}), false);
+  });
+  check("inactive completion and intervening interaction do not move focus", () => {
+    const body = {}, control = {}; let moved = 0, active = false;
+    const doc = {body, activeElement: body, hasFocus: () => active};
+    const target = {focus: options => { assert.deepEqual(options, {preventScroll:true}); moved++; }};
+    const args = {doc, control, target, initiatedOnControl:true, interactionUnchanged:true};
+    assert.equal(handoffResultFocus(args), false); assert.equal(moved, 0);
+    active = true; assert.equal(handoffResultFocus({...args, interactionUnchanged:false}), false); assert.equal(moved, 0);
+    assert.equal(handoffResultFocus(args), true); assert.equal(moved, 1);
+  });
   class FakeWorker {
     constructor() {
       this.terminated = false;

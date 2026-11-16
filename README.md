@@ -1,4 +1,4 @@
-# Enclose
+# Certloom
 
 **Send a numerical answer that someone else can check.**
 
@@ -8,17 +8,19 @@ Check a captured diffusion result in your browser, download its equations and er
 
 ## Try the complete handoff
 
-1. **Check in the browser.** Choose **FiPy · final transient**, then **Check with exact arithmetic**. Inspect the bounds on all 400 solution components and the separate threshold decision.
-2. **Export the evidence.** Choose **Download portable proof .zip**. The bundle contains the input, result, standalone checker and instructions.
-3. **Verify elsewhere.** Extract the ZIP into a new directory and run the command below there. Only Python 3.10+ and its standard library are needed; Enclose itself does not need to be installed.
+1. **Check in the browser.** Choose **FiPy · final transient**, then **Check certificate**. Inspect the bounds on all 400 solution components and the separate threshold decision.
+2. **Export the evidence.** Choose **Download proof .zip**. The bundle contains the input, result, standalone checker and instructions.
+3. **Verify elsewhere.** With a separately installed trusted current-source Certloom, check the ZIP without executing its bundled checker:
 
 ```sh
-python3 -I -S checker.py certificate.json
+certloom verify-bundle certloom-proof.zip
 ```
 
-The checker recomputes the claim instead of trusting the saved result. Compare its output with the `result` field in `verification.json`. To try the recipient step immediately, use the ready-to-check proof linked above.
+The trusted installation recomputes the result and checks the receipt and bundle members. Checksums identify bytes, not the producer. Alternatively, inspect and trust the extracted checker before running `python3 -I -S checker.py certificate.json`; compare its output with `verification.json`. The historical ready-to-check proof linked above predates current `verify-bundle`; its exact checker requires a matching trusted installation.
 
-![Actual browser check of the 400-cell FiPy diffusion result: component bounds and a separate threshold decision.](docs/images/lab.jpg)
+![Actual browser check of the 400-cell FiPy diffusion result: component bounds and a separate threshold decision.](docs/images/workbench-0.2.1-dev.png)
+
+[Mobile bounds view](docs/images/bounds-phone-0.2.1-dev.png) · [Capture and reproduction](docs/captures.md)
 
 [![Artifact checks](https://github.com/nazeeh111/Certloom/actions/workflows/check.yml/badge.svg)](https://github.com/nazeeh111/Certloom/actions/workflows/check.yml)
 [![Release](https://img.shields.io/github/v/release/nazeeh111/Certloom?color=2857cd)](https://github.com/nazeeh111/Certloom/releases/latest)
@@ -33,24 +35,24 @@ Open the lab and choose **FiPy · final transient**. These are the actual equati
 
 Choose **FiPy · steady state** to check the subsequent steady solve. Both matrices have 400 rows and 1,920 nonzeros. The steady case uses nonuniform positive weights. **When weights fail** supplies unit weights for that same system: the minimum dominance gap is zero, so this proof refuses. **A changed answer** replaces a candidate component with zero: the wider valid enclosure cannot establish the original threshold. A certified enclosure and a useful decision are separate outcomes.
 
-Proof bundles retain the NIST attribution and terms in `LICENSE-FIPY.txt`, separate from Enclose's MIT license. The ready-to-check proof linked above contains the steady-state example.
+Proof bundles retain the NIST attribution and terms in `LICENSE-FIPY.txt`, separate from Certloom's MIT license. The ready-to-check proof linked above contains the steady-state example.
 
 This verifies the **exact stored binary64 linear system**. The final transient right-hand side includes a previous approximate time state. It does not certify accumulated time-stepping error, PDE discretization accuracy or physical measurements.
 
 ## Install or use the source
 
-Enclose is the product name. The Python package, imports and command remain `certloom` for compatibility; the existing repository and release links still use `Certloom`.
+Certloom is the product, package and command name. The current source is unreleased `0.2.1.dev0`. The historical 0.2.0 wheel and proof retain their original checker and bundle format.
 
-Python 3.10 or later. Download `certloom-0.2.0-py3-none-any.whl` and install without runtime dependencies:
+Python 3.10 or later. From a current source checkout, install the current package without runtime dependencies:
 
 ```sh
-python3 -m pip install --no-deps certloom-0.2.0-py3-none-any.whl
+python3 -m pip install --no-deps .
 certloom --version
 certloom build-site --out certloom-lab
 python3 -m http.server 8000 --bind 127.0.0.1 --directory certloom-lab
 ```
 
-Visit `http://127.0.0.1:8000`. The release also includes `certloom-0.2.0-browser.zip` for static hosting. To work directly from the complete source ZIP:
+Visit `http://127.0.0.1:8000`. The historical v0.2.0 release also includes its own wheel, browser ZIP and source ZIP. It predates the current bundle-verification command; use its original instructions and matching checker. To work from that historical source ZIP:
 
 ```sh
 unzip certloom-0.2.0-source.zip
@@ -123,7 +125,7 @@ The FiPy fixtures come from one execution of the unchanged [NIST example](https:
 
 [FiPy provenance](examples/fipy-provenance.json) records source, capture, hashes, controls and scope. The [unchanged source](examples/fipy-mesh20x20.py) and [NIST terms and source attribution](examples/FIPY-TERMS.txt) accompany the data. FiPy produces these examples; it is not a package or checker dependency. Original dense fixtures and their separate analytic/rational checks remain documented in [examples/manifest.json](examples/manifest.json) and [examples/validation.json](examples/validation.json).
 
-Enclose uses established mathematics for a solver-independent portable handoff with two separately implemented checkers.
+Certloom uses established mathematics for a solver-independent portable handoff with two separately implemented checkers.
 
 ## Develop
 
@@ -131,7 +133,20 @@ Enclose uses established mathematics for a solver-independent portable handoff w
 python3 -m unittest discover -s tests -v
 node --test tests/test_web_verify.cjs tests/test_web_lifecycle.cjs tests/test_web_sparse.cjs
 python3 scripts/package.py --out dist
-python3 scripts/check_installed.py --wheel dist/certloom-0.2.0-py3-none-any.whl
+python3 scripts/check_installed.py --wheel dist/certloom-0.2.1.dev0-py3-none-any.whl
 ```
 
 The verifier needs no third-party Python runtime packages. Node runs the separate JavaScript checks. Source builds use setuptools; the release packager also has a standard-library path. [MIT licensed](LICENSE), with the NIST example notices retained. See [SECURITY.md](SECURITY.md) for reporting implementation defects.
+
+### Verify a received bundle
+
+Run `certloom verify-bundle proof.zip` to check the member set and receipt,
+compare the bundled checker to this installation, and recompute with the installed
+exact engine. Archive code is never executed. Six-member bundles include checked
+SHA-256 values; older browser bundles have five members and report checksums
+`absent` while still receiving the same receipt and mathematical checks. These
+checks establish byte consistency and exact stored-system results, not who
+produced the archive. Bundles with a checker from another installed version are
+refused; use the matching trusted release. Unsupported archive formats and
+oversized inputs are refused. Output publication requires hard-link support in
+the destination filesystem and never replaces an existing path.

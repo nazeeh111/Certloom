@@ -40,4 +40,4 @@ jobs:
       - name: Build release artifacts
         run: python scripts/package.py --out dist
       - name: Install the delivered wheel and check packaged resources
-        run: python scripts/check_installed.py --wheel dist/certloom-0.2.0-py3-none-any.whl
+        run: python scripts/check_installed.py --wheel dist/certloom-0.2.1.dev0-py3-none-any.whl
