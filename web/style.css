@@ -211,3 +211,7 @@ footer > span:first-child { color: var(--ink); font-weight: 600; }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { transition: none !important; animation: none !important; scroll-behavior: auto !important; }
 }
+
+/* Indicate the scrollable bounds region on narrow layouts. */
+.scroll-hint { display: none; color: var(--secondary); font-size: 14px; margin: 4px 0 10px; }
+@media (max-width: 1050px) { .scroll-hint { display: block; } }

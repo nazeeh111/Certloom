@@ -174,11 +174,13 @@
                 <input id="component-index" type="number" min="0" step="1" required aria-label="Component index" />
                 <button type="button" id="show-component" class="button secondary">Show</button>
               </div>
+              <p id="bounds-scroll-hint" class="scroll-hint">Scroll sideways to see all bounds.</p>
               <div
                 class="table-scroll"
                 tabindex="0"
                 role="region"
                 aria-label="Solution component bounds"
+                aria-describedby="bounds-scroll-hint"
               >
                 <table>
                   <thead>
