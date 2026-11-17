@@ -1,0 +1,52 @@
+{
+  "upstream": "IBM/plex",
+  "revision": "bc6a7e4b37634eb79785d59781893db63ee3edcb",
+  "files": [
+    {
+      "name": "IBMPlexSans-Regular.woff2",
+      "path": "packages/plex-sans/fonts/complete/woff2/IBMPlexSans-Regular.woff2",
+      "bytes": 65080,
+      "git_blob_sha": "9c75d2e7111a534ec1f22efec30395beb4e28c45",
+      "url": "https://raw.githubusercontent.com/IBM/plex/bc6a7e4b37634eb79785d59781893db63ee3edcb/packages/plex-sans/fonts/complete/woff2/IBMPlexSans-Regular.woff2",
+      "sha256": "78efbe80177406a1b80d5925e706e3366290bf0d5309d7b0bd2d7f0d607f3c4c",
+      "modified": false
+    },
+    {
+      "name": "IBMPlexSans-SemiBold.woff2",
+      "path": "packages/plex-sans/fonts/complete/woff2/IBMPlexSans-SemiBold.woff2",
+      "bytes": 69388,
+      "git_blob_sha": "6061208a78b93261b143f6fea70ed4b92f4b4742",
+      "url": "https://raw.githubusercontent.com/IBM/plex/bc6a7e4b37634eb79785d59781893db63ee3edcb/packages/plex-sans/fonts/complete/woff2/IBMPlexSans-SemiBold.woff2",
+      "sha256": "0fe2655c3c88b0b4c578b0046333fde7fb60d18419b9d07b4a1e115ac893e7f6",
+      "modified": false
+    },
+    {
+      "name": "IBMPlexMono-Regular.woff2",
+      "path": "packages/plex-mono/fonts/complete/woff2/IBMPlexMono-Regular.woff2",
+      "bytes": 49248,
+      "git_blob_sha": "8bdb4c4b3f8fae88cc2e3c9c744952dccf89b15a",
+      "url": "https://raw.githubusercontent.com/IBM/plex/bc6a7e4b37634eb79785d59781893db63ee3edcb/packages/plex-mono/fonts/complete/woff2/IBMPlexMono-Regular.woff2",
+      "sha256": "ba204497f16b6d334cee9d1e963a831b73e3a56e1d6300a8489d18df7214b350",
+      "modified": false
+    },
+    {
+      "name": "IBMPlexMono-SemiBold.woff2",
+      "path": "packages/plex-mono/fonts/complete/woff2/IBMPlexMono-SemiBold.woff2",
+      "bytes": 50600,
+      "git_blob_sha": "a0acc15bd6136037c3d188e97c100673c8b294aa",
+      "url": "https://raw.githubusercontent.com/IBM/plex/bc6a7e4b37634eb79785d59781893db63ee3edcb/packages/plex-mono/fonts/complete/woff2/IBMPlexMono-SemiBold.woff2",
+      "sha256": "6a825b4824c01cbb401e829e5a066a1818411bcb3538b5a5792c5ca9b82343c3",
+      "modified": false
+    }
+  ],
+  "license_url": "https://raw.githubusercontent.com/IBM/plex/bc6a7e4b37634eb79785d59781893db63ee3edcb/LICENSE.txt",
+  "license": {
+    "name": "SIL Open Font License1.1",
+    "reserved_font_name": "Plex",
+    "path": "OFL.txt",
+    "sha256": "7e6b2818edbd8f6a01ae80641cc8f16a51080d08fb4e532be3a0b6f74adb07da",
+    "bytes": 4456,
+    "modified": false
+  },
+  "upstream_url": "https://github.com/IBM/plex/tree/bc6a7e4b37634eb79785d59781893db63ee3edcb"
+}
