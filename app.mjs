@@ -370,6 +370,7 @@ async function init() {
     if (!["certified", "not_certified"].includes(result.status))
       throw new Error("Unexpected verification status.");
     const certified = result.status === "certified";
+    let revealInitialSelection = null;
     const sparse = result.method === "weighted-diagonal-dominance";
     $("verdict").classList.toggle("refused", !certified);
     setText(
@@ -410,10 +411,33 @@ async function init() {
     $("vector-body").replaceChildren();
     if (certified) {
       setText("dimension", `${result.dimension} unknowns${sparse ? ` · ${result.nonzeros.toLocaleString()} coefficients` : ""} · indices start at 0`);
-      let start = 0;
+      let selectedIndex = result.decision?.index ?? 0;
       const pageSize = 50;
+      let start = Math.floor(selectedIndex / pageSize) * pageSize;
       $("component-index").max = String(result.dimension - 1);
-      $("component-index").value = String(result.decision?.index ?? 0);
+      $("component-index").value = String(selectedIndex);
+      const scroller = $("vector-body").closest(".table-scroll");
+      function renderSelection(announce = false) {
+        const enclosure = result.enclosures[selectedIndex];
+        const lower = display(enclosure.lower, "lower");
+        const upper = display(enclosure.upper, "upper");
+        setText("selected-component-title", `Component ${selectedIndex}`);
+        setText("selected-candidate", display(midpoint(enclosure.lower, enclosure.upper)));
+        setText("selected-lower", lower);
+        setText("selected-upper", upper);
+        setText("selected-exact", `Lower: ${exact(enclosure.lower)}\nUpper: ${exact(enclosure.upper)}${sparse ? `\nError radius: ${exact(result.radii[selectedIndex])}` : ""}`);
+        $("component-selection-status").textContent = announce
+          ? `Selected component ${selectedIndex}. Guaranteed lower bound ${lower}. Guaranteed upper bound ${upper}.`
+          : "";
+      }
+      function revealSelection() {
+        const row = $("vector-body").querySelector('[aria-current="true"]');
+        if (!row) return;
+        const heading = scroller.querySelector("thead");
+        scroller.scrollTop = Math.max(0,
+          row.getBoundingClientRect().top - scroller.getBoundingClientRect().top
+          + scroller.scrollTop - heading.getBoundingClientRect().height - 1);
+      }
       function renderPage() {
         $("vector-body").replaceChildren();
         const end = Math.min(start + pageSize, result.dimension);
@@ -423,6 +447,10 @@ async function init() {
         result.enclosures.slice(start, end).forEach((enclosure, offset) => {
         const index = start + offset;
         const row = document.createElement("tr");
+        if (index === selectedIndex) {
+          row.className = "selected-component";
+          row.setAttribute("aria-current", "true");
+        }
         const values = [
           String(index),
           display(midpoint(enclosure.lower, enclosure.upper)),
@@ -449,6 +477,7 @@ async function init() {
         detailsRow.append(cell);
         $("vector-body").append(row, detailsRow);
         });
+        scroller.scrollTop = 0;
       }
       $("previous-components").onclick = () => { start = Math.max(0, start - pageSize); renderPage(); };
       $("next-components").onclick = () => { start = Math.min(Math.floor((result.dimension - 1) / pageSize) * pageSize, start + pageSize); renderPage(); };
@@ -457,10 +486,15 @@ async function init() {
         if (!input.reportValidity()) return;
         const index = input.valueAsNumber;
         if (!Number.isSafeInteger(index) || index < 0 || index >= result.dimension) return;
+        selectedIndex = index;
         start = Math.floor(index / pageSize) * pageSize;
         renderPage();
+        renderSelection(true);
+        revealSelection();
       };
       renderPage();
+      renderSelection();
+      revealInitialSelection = revealSelection;
       if (result.decision) {
         const decision = result.decision,
           label = `Solution component ${decision.index}`;
@@ -502,6 +536,7 @@ async function init() {
     );
     $("empty").hidden = true;
     $("result").hidden = false;
+    revealInitialSelection?.();
   }
   $("verify").addEventListener("click", async () => {
     if (verifier.busy) return;

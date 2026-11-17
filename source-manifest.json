@@ -3,18 +3,53 @@
   "files": [
     {
       "path": "app.mjs",
-      "bytes": 28152,
-      "sha256": "0d604f1fa461320882b232eba907d72a8b5fca0b1e6cd7466cedf8ac92198558"
+      "bytes": 29979,
+      "sha256": "b27ed9052940e1d482a773fb84ad4050914cb87b916ac6a07926530b48331e59"
+    },
+    {
+      "path": "fonts/IBMPlexMono-Regular.woff2",
+      "bytes": 49248,
+      "sha256": "ba204497f16b6d334cee9d1e963a831b73e3a56e1d6300a8489d18df7214b350"
+    },
+    {
+      "path": "fonts/IBMPlexMono-SemiBold.woff2",
+      "bytes": 50600,
+      "sha256": "6a825b4824c01cbb401e829e5a066a1818411bcb3538b5a5792c5ca9b82343c3"
+    },
+    {
+      "path": "fonts/IBMPlexSans-Regular.woff2",
+      "bytes": 65080,
+      "sha256": "78efbe80177406a1b80d5925e706e3366290bf0d5309d7b0bd2d7f0d607f3c4c"
+    },
+    {
+      "path": "fonts/IBMPlexSans-SemiBold.woff2",
+      "bytes": 69388,
+      "sha256": "0fe2655c3c88b0b4c578b0046333fde7fb60d18419b9d07b4a1e115ac893e7f6"
+    },
+    {
+      "path": "fonts/OFL.txt",
+      "bytes": 4456,
+      "sha256": "7e6b2818edbd8f6a01ae80641cc8f16a51080d08fb4e532be3a0b6f74adb07da"
+    },
+    {
+      "path": "fonts/README.md",
+      "bytes": 510,
+      "sha256": "3655d60194ebdf944e536a60233750b5b3bef144a3da778fb6c7ce7bc51bb5f8"
+    },
+    {
+      "path": "fonts/source.json",
+      "bytes": 2565,
+      "sha256": "c0e29c3b5ab7152dcaa9bf39bdaa5f54059d1b531004153bdc94ad08fc8f6ea4"
     },
     {
       "path": "index.html",
-      "bytes": 12320,
-      "sha256": "662c7f9e2a355b1d4bec00fdc10a256bd299896eedeaddd0a54c3b5458ebfa40"
+      "bytes": 13227,
+      "sha256": "67060517f40771257358c6edbbfc5761ddb8b4decd750c02ad0148e9d801c937"
     },
     {
       "path": "style.css",
-      "bytes": 15397,
-      "sha256": "3494fd1cb5c715bfa9b16f3591d3cd273046a33121808136da4fc315eeecf15c"
+      "bytes": 17646,
+      "sha256": "7dd80ae4f95f5b45ca00bae8541a6644de56f032988778e233d725108e4100c8"
     },
     {
       "path": "verify.mjs",
@@ -105,6 +140,16 @@
       "path": "docs/method.html",
       "bytes": 10483,
       "sha256": "be4b6435271d18f9e381486ef57dc072e2ee2f32534e2975a4496b34c5529bd0"
+    },
+    {
+      "path": "docs/presentation/proof-mobile.html",
+      "bytes": 42553,
+      "sha256": "bc245aac5ab41a5bfe5ab332dafd216cf9f40763cc2bb03cdf39fdcb999e01dc"
+    },
+    {
+      "path": "docs/presentation/proof.html",
+      "bytes": 41926,
+      "sha256": "28fe4fe89a4147db6ca9cf078f04c5df28f7537cda3a3caa4449318a7356ced9"
     },
     {
       "path": "checker.py",
