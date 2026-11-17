@@ -1,33 +1,33 @@
 # Certloom
 
-**Send a numerical answer that someone else can check.**
+**Carry the equations with the answer. Let the recipient check the claim.**
 
-Check a captured diffusion result in your browser, download its equations and error-bound checker, and verify the bundle with plain Python. The recipient needs no FiPy, NumPy or producing solver. The guarantee concerns the **stored linear equations**, not the physical model's accuracy.
+Certloom packages a numerical result with its stored linear system, exact error bounds and a small standalone checker. A recipient can recompute the claim with plain Python, without the producing solver, FiPy or NumPy. The browser provides a separate local BigInt implementation. Established numerical verification theory supplies the bounds; Certloom supplies the portable handoff.
 
-**[Open the browser lab](https://nazeeh111.github.io/Certloom/)** · [Download a ready-to-check proof](https://github.com/nazeeh111/Certloom/releases/download/v0.2.0/certloom-0.2.0-diffusion-proof.zip) · [Method and limits](https://nazeeh111.github.io/Certloom/docs/method.html)
+[Open the browser lab](https://nazeeh111.github.io/Certloom/) · [Inspect this completed handoff](docs/presentation/README.md) · [Method and limits](https://nazeeh111.github.io/Certloom/docs/method.html)
 
-## Try the complete handoff
+<picture>
+  <source media="(max-width: 600px)" srcset="docs/presentation/proof-mobile.png">
+  <img src="docs/presentation/proof.png" alt="All 400 candidate components from the captured FiPy transient system, with a separate component 19 threshold claim. Its guaranteed lower bound 0.996898828203779540 is above stored 0.98. Error intervals are narrower than a display pixel at the overview scale; exact fractions, not the plotted curve, determine certification. Separate steady-case controls show an undecidable threshold and failed unit weights.">
+</picture>
 
-1. **Check in the browser.** Choose **FiPy · final transient**, then **Check certificate**. Inspect the bounds on all 400 solution components and the separate threshold decision.
-2. **Export the evidence.** Choose **Download proof .zip**. The bundle contains the input, result, standalone checker and instructions.
-3. **Verify elsewhere.** With a separately installed trusted current-source Certloom, check the ZIP without executing its bundled checker:
+The actual handoff contains **400 equations and 1,920 stored coefficients**. A fresh trusted checker recomputes every dominance gap and residual, then verifies all 400 enclosures. Component 19 has outward-rounded bounds **[0.996898828203779540, 0.996898828203785027]**, enough to establish the strict stored 0.98 threshold. The line plot shows stored index order, not a spatial field or physical measurement. [Exact results and reproducible figure](docs/presentation/README.md).
+
+## Verify the artifact, then interpret the result
+
+1. **Check the stored equations.** Open the lab, choose **FiPy · final transient** and **Check certificate**. Inspect the enclosure and its separate threshold decision.
+2. **Carry the evidence.** Choose **Download proof .zip**, or download this [current-source six-member proof](docs/presentation/transient-proof.zip). It contains the input, recomputed receipt, standalone checker, checksums, instructions and NIST notice.
+3. **Verify with trusted code.** Use a separately installed matching current-source Certloom. `verify-bundle` checks archive members, checker identity and exact recomputation without executing archive code:
 
 ```sh
-certloom verify-bundle certloom-proof.zip
+certloom verify-bundle transient-proof.zip
 ```
 
-The trusted installation recomputes the result and checks the receipt and bundle members. Checksums identify bytes, not the producer. Alternatively, inspect and trust the extracted checker before running `python3 -I -S checker.py certificate.json`; compare its output with `verification.json`. The historical ready-to-check proof linked above predates current `verify-bundle`; its exact checker requires a matching trusted installation.
+The [completed recipient checks](docs/presentation/handoff-checks.json) independently verify both CLI and real browser downloads, then compare fresh extracted `python3 -I -S checker.py certificate.json` runs after establishing trust in the extracted checker. Rehashed receipt or checker alterations refuse. Checksums establish byte consistency, not authorship.
 
-![Actual browser check of the 400-cell FiPy diffusion result: component bounds and a separate threshold decision.](docs/images/workbench-0.2.1-dev.png)
+**A certified enclosure is not always a useful answer.** The separate steady-state changed-answer control remains certified but its threshold is `undecidable`; unit weights fail the proof premise. Neither refusal proves the matrix singular or the candidate wrong. [Actual outcomes, commands and limits](docs/presentation/README.md).
 
-[Mobile bounds view](docs/images/bounds-phone-0.2.1-dev.png) · [Capture and reproduction](docs/captures.md)
-
-[![Artifact checks](https://github.com/nazeeh111/Certloom/actions/workflows/check.yml/badge.svg)](https://github.com/nazeeh111/Certloom/actions/workflows/check.yml)
-[![Release](https://img.shields.io/github/v/release/nazeeh111/Certloom?color=2857cd)](https://github.com/nazeeh111/Certloom/releases/latest)
-[![Python](https://img.shields.io/badge/Python-3.10%2B-416079)](https://nazeeh111.github.io/Certloom/docs/method.html)
-[![License](https://img.shields.io/badge/Original_code-MIT-176448)](LICENSE)
-
-The browser runs a separate BigInt implementation locally in a Web Worker. No account, CDN, runtime download or computation service. Dense certificates with an approximate inverse remain supported.
+[Actual desktop workbench](docs/presentation/workbench-desktop.png) · [Actual 390px bounds view](docs/presentation/workbench-mobile.png) · [Current source setup](#install-or-use-the-source)
 
 ## Check an application result
 
@@ -35,7 +35,7 @@ Open the lab and choose **FiPy · final transient**. These are the actual equati
 
 Choose **FiPy · steady state** to check the subsequent steady solve. Both matrices have 400 rows and 1,920 nonzeros. The steady case uses nonuniform positive weights. **When weights fail** supplies unit weights for that same system: the minimum dominance gap is zero, so this proof refuses. **A changed answer** replaces a candidate component with zero: the wider valid enclosure cannot establish the original threshold. A certified enclosure and a useful decision are separate outcomes.
 
-Proof bundles retain the NIST attribution and terms in `LICENSE-FIPY.txt`, separate from Certloom's MIT license. The ready-to-check proof linked above contains the steady-state example.
+Proof bundles retain the NIST attribution and terms in `LICENSE-FIPY.txt`, separate from Certloom's MIT license. The [historical v0.2.0 ready-to-check proof](https://github.com/nazeeh111/Certloom/releases/download/v0.2.0/certloom-0.2.0-diffusion-proof.zip) contains the steady-state example. The current-source proof downloads above contain the final transient example.
 
 This verifies the **exact stored binary64 linear system**. The final transient right-hand side includes a previous approximate time state. It does not certify accumulated time-stepping error, PDE discretization accuracy or physical measurements.
 
