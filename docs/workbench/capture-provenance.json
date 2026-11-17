@@ -1,0 +1,82 @@
+{
+  "capture_date": "2026-11-17",
+  "application_source_commit": "2d256bd2b35f76c2abb97b4b5182a086dd716f1a",
+  "application_source_tree": "3163383950f7073d8e2e7e312b0ca6e0f08f36ab",
+  "application_source_url": "https://github.com/nazeeh111/Certloom/tree/2d256bd2b35f76c2abb97b4b5182a086dd716f1a",
+  "input": {
+    "path": "../../examples/fipy-transient400.json",
+    "bytes": 118184,
+    "sha256": "8001aaf16bc86b55ed4912ec18ab9bdaece1e7ed70c26a52ace6c0c0e6175998",
+    "dimension": 400,
+    "nonzeros": 1920,
+    "origin": "Retained original NIST FiPy final transient linear-system capture; no solver/native FiPy rerun"
+  },
+  "state": "Original final-transient certificate certified; declared component19 strict stored0.98 threshold is above. Separate selected-component capture shows399, without adding a threshold claim for399.",
+  "actions": [
+    "Open exact built local workbench in a fresh empty browser context",
+    "Choose FiPy \u00b7 final transient",
+    "Click Check certificate",
+    "Compare displayed lower/upper/threshold with explicit-direction formatting from the unchanged trusted Python checker",
+    "Download actual verification JSON; compare all400 result fields with trusted Python output",
+    "Take native #decision element screenshot",
+    "At320viewport fill component index399, Tab to Show, press Space; verify bounds; native inspector element screenshot"
+  ],
+  "runtime": "Installed full Chrome, device scale2, pinned local IBM Plex fonts all loaded; existing Playwright runtime; no new dependency",
+  "security": "Only task-owned localhost; original application CSP unchanged; no account/user profile or mock state; read-only DOM inspection and actual controls. Named Certloom-only user permission permits omitting CLI worker wrapper. Owned browsers/proxy closed after capture.",
+  "method_limits": "These verify exact stored binary64 equations. No physical-model accuracy, accumulated transient error, measurement or source-authenticity claim. Exact fractions determine the verdict; threshold display rounds upward, lower endpoints downward and upper endpoints upward.",
+  "images": [
+    {
+      "path": "decision-wide.png",
+      "bytes": 64933,
+      "sha256": "d5e8f03e981f9e4c6e47700ddcf7d8abf3e521c14a4c4a808d9a09db7ab0d405",
+      "pixel_width": 1464,
+      "pixel_height": 454,
+      "viewport": {
+        "width": 1440,
+        "height": 1000
+      },
+      "device_scale_factor": 2,
+      "element": "#decision",
+      "native_element_screenshot": true,
+      "raster_edits": false,
+      "rendered_CSS_width": 731.984375,
+      "rendered_CSS_height": 225.890625
+    },
+    {
+      "path": "decision-mobile.png",
+      "bytes": 84875,
+      "sha256": "0dfd3164d1c70ee344b251baaa6799479465259ecc48d5e12827b64502aa36d9",
+      "pixel_width": 516,
+      "pixel_height": 912,
+      "viewport": {
+        "width": 320,
+        "height": 1000
+      },
+      "device_scale_factor": 2,
+      "element": "#decision",
+      "native_element_screenshot": true,
+      "raster_edits": false,
+      "rendered_CSS_width": 258,
+      "rendered_CSS_height": 455.671875
+    },
+    {
+      "path": "component-399-mobile.png",
+      "bytes": 54973,
+      "sha256": "9225cdfb570e78225e68634e5fd06d2eebc45bbe7c5644d1fe24f964bb5c80a5",
+      "pixel_width": 516,
+      "pixel_height": 672,
+      "viewport": {
+        "width": 320,
+        "height": 1000
+      },
+      "device_scale_factor": 2,
+      "element": ".component-inspector",
+      "native_element_screenshot": true,
+      "raster_edits": false,
+      "rendered_CSS_width": 258,
+      "rendered_CSS_height": 335.171875
+    }
+  ],
+  "artifact_policy": "All older figures, captures, data, proof ZIPs and notices retained byteexact in their original locations. These are newly captured application sections, not whole-viewport or composited dashboards.",
+  "density": "Native2x browser captures retain logical widths732desktop and258phone for sharper embedded text. No raster processing was performed. All viewport dimensions are CSS pixels; PNG dimensions are recorded separately."
+}
