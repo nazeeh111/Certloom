@@ -1,0 +1,30 @@
+{
+  "source_revision": "0c7728c9af019b60209a9f7c557a97fbd5b197f7",
+  "browser": "Installed actual Chrome; locally built current source, localhost HTTP",
+  "web_source": {
+    "web/worker.mjs": "4049363bbed7959cb38e1f68c3f0fb81ad22c1dc4376f8bce7a0bb4705c6110c",
+    "web/index.html": "662c7f9e2a355b1d4bec00fdc10a256bd299896eedeaddd0a54c3b5458ebfa40",
+    "web/verify.mjs": "db8a705f77c88794e5f5638b00f88c1444667a8a40e3aa755b629faa0325ef35",
+    "web/style.css": "3494fd1cb5c715bfa9b16f3591d3cd273046a33121808136da4fc315eeecf15c",
+    "web/app.mjs": "0d604f1fa461320882b232eba907d72a8b5fca0b1e6cd7466cedf8ac92198558"
+  },
+  "files": {
+    "workbench-desktop.png": {
+      "bytes": 274367,
+      "sha256": "f2a594302402161fc3b62c277cbde880687c770b03621a8dea873ef2a3eece96"
+    },
+    "workbench-mobile.png": {
+      "bytes": 62386,
+      "sha256": "fb3e098eeb43acb32863ea8d740a7d85949b6bae06da55b15595612531bca083"
+    },
+    "browser-proof.zip": {
+      "bytes": 312617,
+      "sha256": "71c55b0e7b7a72189e73083dc3e10c441473f5dcb3012d2e563551685629884c"
+    },
+    "transient-proof.zip": {
+      "bytes": 33731,
+      "sha256": "33332bf7127a2786b542a78df2ecde35c26fae419e3926cab25226ec13af4c14"
+    }
+  },
+  "scope": "Desktop current certificate;390px exact current-main bounds region after actual ArrowRight keyboard scroll. Held nowrap CSS remains separate; no UI image editing."
+}
