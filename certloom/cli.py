@@ -8,7 +8,8 @@ from pathlib import Path
 from . import __version__
 from .artifact import read_certificate, verify_bundle, write_bundle
 from .publication import fresh_output
-from .engine import VerificationError, verify_text
+from .engine import VerificationError, load_document, verify_text
+from .producer import reweight_sparse_certificate
 from .site import build
 
 
@@ -33,6 +34,11 @@ def main(argv=None):
     bundle.add_argument("--out", required=True)
     bundle_verify = commands.add_parser("verify-bundle", help="Check a bundle using the installed trusted engine")
     bundle_verify.add_argument("bundle")
+    reweight = commands.add_parser(
+        "reweight", help="Find certified weights for a sparse certificate"
+    )
+    reweight.add_argument("certificate")
+    reweight.add_argument("--out", required=True, help="Write a new certificate")
     site = commands.add_parser(
         "build-site", help="Build a static browser lab into a new directory"
     )
@@ -42,6 +48,12 @@ def main(argv=None):
         if args.command == "build-site":
             result = build(args.out)
             print(json.dumps({"out": args.out, "files": len(result["files"])}))
+        elif args.command == "reweight":
+            candidate = reweight_sparse_certificate(load_document(read_certificate(args.certificate)))
+            text = json.dumps(candidate, separators=(",", ":"))
+            with fresh_output(args.out) as stream:
+                stream.write(text.encode("utf-8"))
+            print(json.dumps({"status": "certified", "out": args.out}))
         elif args.command == "bundle":
             print(
                 json.dumps(write_bundle(read_certificate(args.certificate), args.out))

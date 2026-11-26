@@ -109,7 +109,22 @@ with open("certificate.json", "x", encoding="utf-8") as stream:
     json.dump(document, stream)
 ```
 
-The decision is optional; choose an index and threshold meaningful for your system. The function infers dimension from `b`, converts coefficient values explicitly to finite binary64 and encodes canonical Python `float.hex()` strings. It accepts integer index arrays, including NumPy integer scalars, without importing NumPy. It does not sort columns, combine duplicates, remove zeros, choose weights or run a solver. The checker validates the document again.
+The decision is optional; choose an index and threshold meaningful for your system. The function infers dimension from `b`, converts coefficient values explicitly to finite binary64 and encodes canonical Python `float.hex()` strings. It accepts integer index arrays, including NumPy integer scalars, without importing NumPy. It preserves explicit weights and the supplied matrix structure. The checker validates the document again.
+
+Omit `weights` to search for a sufficient scaling. An existing sparse certificate
+can also be reweighted without changing its equations, candidate solution or decision:
+
+```sh
+certloom reweight examples/fipy-uniform-refusal.json --out reweighted.json
+certloom verify reweighted.json
+```
+
+Unit weights fail on this steady 400-equation example. The search finds weights
+that the exact verifier accepts, establishing that component 19 exceeds the
+stored threshold. It first tries unit weights, then up to 256 sparse
+Gauss-Seidel sweeps on the comparison matrix. Successful supplied weights
+are preserved. Search exhaustion leaves the output path free and the system's
+invertibility undecided. Exported certificates use the existing sparse format.
 
 Rows require strictly increasing, in-range columns. Duplicate coordinates, explicit zero entries and nonpositive weights refuse. Missing entries mean zero; an empty row or missing diagonal can be valid input but cannot pass this proof. The [format guide](https://nazeeh111.github.io/Certloom/docs/method.html) gives the complete schema and result fields.
 
