@@ -281,5 +281,41 @@ class SparseTests(unittest.TestCase):
             )
 
 
+
+
+
+class WeightSearchTests(unittest.TestCase):
+    def test_repair_fipy_weights_preserves_stored_problem(self):
+        from pathlib import Path
+        path = Path(__file__).resolve().parents[1] / "examples/fipy-uniform-refusal.json"
+        original = json.loads(path.read_text())
+        before = copy.deepcopy(original)
+        self.assertEqual(verify(original)["status"], "not_certified")
+        repaired = producer.reweight_sparse_certificate(original)
+        self.assertEqual(original, before)
+        self.assertEqual({k for k in original if original[k] != repaired[k]}, {"weights"})
+        result = verify(repaired)
+        self.assertEqual(result["decision"]["status"], "above")
+        self.assertEqual(producer.reweight_sparse_certificate(repaired), repaired)
+
+    def test_optional_weights_are_checked_by_existing_verifier(self):
+        args = ([0, 2, 4], [0, 1, 0, 1], [2, 3, 1, 4], [5, 5], [1, 1])
+        self.assertEqual(verify(producer.make_sparse_certificate(*args, weights=[1, 1]))["status"],
+                         "not_certified")
+        self.assertEqual(verify(producer.make_sparse_certificate(*args))["status"], "certified")
+
+    def test_search_limits_refuse_without_modifying_input(self):
+        cases = [
+            certificate([[0, 1], [1, 0]], [1, 1], [1, 1], [1, 1]),
+            certificate([[1, 1], [1, 1]], [2, 2], [1, 1], [1, 1]),
+            certificate([[1e-300, 1e300], [0, 1]], [0, 0], [0, 0], [1, 1]),
+        ]
+        for document in cases:
+            before = copy.deepcopy(document)
+            with self.subTest(matrix=document["A"]), self.assertRaises(VerificationError):
+                producer.reweight_sparse_certificate(document)
+            self.assertEqual(before, document)
+
+
 if __name__ == "__main__":
     unittest.main()

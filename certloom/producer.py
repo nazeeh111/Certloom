@@ -9,8 +9,10 @@ from .engine import (
     MAX_DIMENSION,
     MAX_SPARSE_DIMENSION,
     MAX_NONZEROS,
+    SPARSE_FORMAT,
     VerificationError,
     load_document,
+    verify,
 )
 
 
@@ -59,18 +61,19 @@ def make_certificate(A, b, x, R, decision=None):
     return load_document(json.dumps(document))
 
 
-def make_sparse_certificate(indptr, indices, data, b, x, weights, decision=None):
+def make_sparse_certificate(indptr, indices, data, b, x, weights=None, decision=None):
     """Encode canonical CSR and positive weights as explicit stored binary64.
 
     Dimension is inferred from b. No sorting, duplicate aggregation, zero
-    removal, matrix expansion or choice of weights is performed here.
+    removal or matrix expansion is performed. Omit weights to search for
+    a witness. Explicit weights are preserved, even when the proof fails.
     """
     try:
         n = len(b)
         if (
             not 1 <= n <= MAX_SPARSE_DIMENSION
             or len(x) != n
-            or len(weights) != n
+            or (weights is not None and len(weights) != n)
             or len(indptr) != n + 1
             or len(indices) != len(data)
             or len(data) > MAX_NONZEROS
@@ -100,7 +103,7 @@ def make_sparse_certificate(indptr, indices, data, b, x, weights, decision=None)
         },
         "b": [_encode(v) for v in b],
         "x": [_encode(v) for v in x],
-        "weights": [_encode(v) for v in weights],
+        "weights": [_encode(v) for v in weights] if weights is not None else [1.0.hex()] * n,
         "decision": None,
     }
     if decision is not None:
@@ -110,4 +113,52 @@ def make_sparse_certificate(indptr, indices, data, b, x, weights, decision=None)
             "index": index(decision["index"]),
             "above": _encode(decision["above"]),
         }
-    return load_document(json.dumps(document))
+    document = load_document(json.dumps(document))
+    if weights is None:
+        return reweight_sparse_certificate(document)
+    return document
+
+
+def reweight_sparse_certificate(document):
+    """Find a sufficient positive scaling for a validated sparse system.
+
+    Search is bounded. Failure to find weights makes no singularity claim.
+    Only weights change, and the exact checker admits every returned witness.
+    """
+    if not isinstance(document, dict) or document.get("format") != SPARSE_FORMAT:
+        raise VerificationError("Weight search requires a sparse CSR certificate.")
+    candidate = dict(document)
+    if verify(candidate)["status"] == "certified":
+        return candidate
+
+    matrix = candidate["A"]
+    n = matrix["dimension"]
+    weights = [1.0] * n
+    unit = [1.0.hex()] * n
+    if candidate["weights"] != unit:
+        candidate["weights"] = unit
+        if verify(candidate)["status"] == "certified":
+            return candidate
+
+    rows = []
+    for i, (start, end) in enumerate(zip(matrix["indptr"], matrix["indptr"][1:])):
+        entries = [(matrix["indices"][k], abs(float.fromhex(matrix["data"][k])))
+                   for k in range(start, end)]
+        diagonal = next((value for col, value in entries if col == i), 0.0)
+        if diagonal == 0.0:
+            raise VerificationError("A missing diagonal precludes strict weighted dominance.")
+        rows.append([(col, value / diagonal) for col, value in entries if col != i])
+
+    # Gauss-Seidel sweeps on (I - |D|^-1 |A-D|)w = 1 propose a positive gap.
+    # The floating-point solve is only a producer; certification remains exact.
+    for sweep in range(1, 257):
+        for i, row in enumerate(rows):
+            value = 1.0 + sum(factor * weights[j] for j, factor in row)
+            if not math.isfinite(value):
+                raise VerificationError("Weight search exceeded the finite binary64 range.")
+            weights[i] = value
+        if (sweep & (sweep - 1)) == 0:
+            candidate["weights"] = [value.hex() for value in weights]
+            if verify(candidate)["status"] == "certified":
+                return load_document(json.dumps(candidate, separators=(",", ":")))
+    raise VerificationError("No certified weights found within 256 sweeps.")

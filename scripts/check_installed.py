@@ -191,6 +191,15 @@ def check(source):
             ).stdout
         )
         assert sparse_refusal["status"] == "not_certified"
+        repaired = temporary / "reweighted.json"
+        refused_input = package / "examples/fipy-uniform-refusal.json"
+        run([executable, "reweight", refused_input, "--out", repaired])
+        verdict = json.loads(run([executable, "verify", repaired]).stdout)
+        assert verdict["status"] == "certified" and verdict["decision"]["status"] == "above"
+        before = repaired.read_bytes()
+        run([executable, "reweight", refused_input, "--out", repaired], 2)
+        assert repaired.read_bytes() == before
+        checks.append("reweighted steady system certifies and refuses output replacement")
         sparse_bundle = temporary / "diffusion.zip"
         run([executable, "bundle", sparse, "--out", sparse_bundle])
         sparse_detached = temporary / "sparse-detached"
